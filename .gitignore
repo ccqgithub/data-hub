@@ -1,0 +1,15 @@
+*.log
+*.pid
+*.seed
+
+.DS_Store
+
+.idea
+.tags*
+node_modules
+
+/public
+/server/i18n/temp
+
+npm-debug.log*
+#yarn.lock
