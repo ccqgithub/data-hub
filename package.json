@@ -17,6 +17,6 @@
   },
   "homepage": "https://github.com/ccqgithub/data-hub#readme",
   "dependencies": {
-    "rxjs": "^5.4.2"
+    
   }
 }
