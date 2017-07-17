@@ -1,3 +1,6 @@
+import Rx from 'rxjs'
+import invariant from './util/invariant'
+
 export class Store {
 
   // constructor
@@ -6,46 +9,48 @@ export class Store {
 
     this.name = options.name || 'storeName'
     this._isDataHubStore = true
-    this._observers = []
+    this._subject = new Rx.Subject()
     this._state = options.initialState || {}
     this._mutations = options.mutations || {}
     this._modules = options.modules || {}
   }
 
   _check(options) {
-    if (typeof options !== 'object') {
-      throw new Error(`store options must be object!`)
-    }
+    invariant(
+      typeof options === 'object',
+      `Store options must be object!`
+    )
 
-    if (options.initialState && typeof options.initialState !== 'object') {
-      throw new Error(`initialState must be object!`)
-    }
+    invariant(
+      options.initialState
+        && typeof options.initialState === 'object',
+      `Store initialState must be object!`
+    )
 
-    if (options.mutations && typeof options.mutations !== 'object') {
-      throw new Error(`mutations must be object!`)
-    }
+    invariant(
+      options.mutations
+        && typeof options.mutations === 'object',
+      `Store mutations must be object!`
+    )
 
-    if (options.modules && typeof options.modules !== 'object') {
-      throw new Error(`modules must be object!`)
-    }
+    invariant(
+      options.modules
+        && typeof options.modules === 'object',
+      `Store modules must be object!`
+    )
 
     Object.keys(options.modules).forEach(key => {
       let module = options.modules[key]
-      if (typeof module !== 'object' || !module._isDataHubStore) {
-        throw new Error(`module must be a store instance!`)
-      }
+      invariant(
+        typeof module === 'object' && module._isDataHubStore,
+        `Store module must be a store instance!`
+      )
     })
   }
 
   // subscribe
   subscribe(observer) {
-    this._observers.push(observer)
-    return {
-      unsubscripbe() {
-        let index = this._observers.indexOf(observer)
-        this._observers.splice(index, 1)
-      }
-    }
+    return this._subject.subscribe(observer)
   }
 
   // get store's state
@@ -72,22 +77,23 @@ export class Store {
       let moduleName = arr[0]
       let module = this.modules[moduleName]
 
-      if (!module) {
-        throw new Error(`module <${location}> is not defined!`)
-      }
+      invariant(
+        module,
+        `module <${location}> is not defined!`
+      )
 
       module.commit(arr[1], payload, location)
     }
 
     // mutation
-    if (!this.mutations[mutation]) {
-      throw new Error(`mutation <${location}> is not defined!`)
-    }
+    invariant(
+      this.mutations[mutation],
+      `mutation <${location}> is not defined!`
+    )
 
     this.mutations[mutation](payload)
 
-    this._observers.forEach(observer => {
-      observer.next(this)
-    })
+    // let observer know
+    this._subject.next(this.getState())
   }
 }

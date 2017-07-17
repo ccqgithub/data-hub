@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>test rxjs</title>
+</head>
+<body>
+
+  <script src="https://unpkg.com/rxjs/bundles/Rx.min.js"></script>
+  <script>
+  var subject = new Rx.Subject();
+
+  subject.subscribe({
+    next: (v) => console.log('observerA: ' + v)
+  });
+  subject.subscribe({
+    next: (v) => console.log('observerB: ' + v)
+  });
+
+  subject.next(1);
+  subject.next(2);
+
+  subject.subscribe({
+    next: (v) => console.log('observerC: ' + v)
+  });
+
+  subject.next(3);
+
+  </script>
+</body>
+</html>

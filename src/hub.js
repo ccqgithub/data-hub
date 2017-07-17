@@ -1,24 +1,42 @@
+import Rx from 'rxjs'
+import invariant from './util/invariant'
+
 export default class DataHub {
   constructor(options={}) {
-    this._actions = {}
+    this._ins = {}
+    this._outs = {}
   }
 
-  action(actionName, payload) {
-    return this._actions[actionName](payload)
+  in(pipeName, payload) {
+    return this._ins[pipeName]
   }
 
-  addAction(actionName, fn) {
-    if (this._actions[actionName]) {
-      throw new Error(`Action can not duplicate: <${actionName}> !`)
+  registerIn(pipeName, observer) {
+    let subject = new Rx.Subject()
+    subject.subscribe(observer)
+    this._ins[pipeName] = subject
+  }
+
+  registerIns(context, observers) {
+    Object.keys(observers).forEach(key => {
+      this.registerIn(context + '.' + key, observers[key])
+    })
+  }
+
+  out(pipeName, payload) {
+    let observable = this._outs[pipeName](payload)
+    return Rx.Observable.from(observable)
+  }
+
+  registerOut(pipeName, fn) {
+    this._outs[pipeName] = (payload) => {
+      return fn(payload)
     }
-
-    this._actions[actionName] = (...args) => fn(...args)
   }
 
-  addActions(actions, context='') {
-    Object.keys(actions).forEach(key => {
-      let actionName = context ? context + '.' + key : key
-      this.addAction(actionName, actions[key])
+  registerOuts(context, fns) {
+    Object.keys(observables).forEach(key => {
+      this.registerOut(context + '.' + key, observables[key])
     })
   }
 }
