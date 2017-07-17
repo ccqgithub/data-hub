@@ -7,34 +7,34 @@ export default class DataHub {
     this._outs = {}
   }
 
-  in(pipeName, payload) {
+  push(pipeName, payload) {
     return this._ins[pipeName]
   }
 
-  registerIn(pipeName, observer) {
+  addDest(pipeName, observer) {
     let subject = new Rx.Subject()
     subject.subscribe(observer)
     this._ins[pipeName] = subject
   }
 
-  registerIns(context, observers) {
+  addDests(context, observers) {
     Object.keys(observers).forEach(key => {
       this.registerIn(context + '.' + key, observers[key])
     })
   }
 
-  out(pipeName, payload) {
+  pull(pipeName, payload) {
     let observable = this._outs[pipeName](payload)
     return Rx.Observable.from(observable)
   }
 
-  registerOut(pipeName, fn) {
+  addSource(pipeName, fn) {
     this._outs[pipeName] = (payload) => {
       return fn(payload)
     }
   }
 
-  registerOuts(context, fns) {
+  addSources(context, fns) {
     Object.keys(observables).forEach(key => {
       this.registerOut(context + '.' + key, observables[key])
     })
