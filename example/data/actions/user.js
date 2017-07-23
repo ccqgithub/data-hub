@@ -1,13 +1,10 @@
-import hub from '../hubs/main'
+import Rx from 'rxjs';
+import hub from '../hubs/main';
+import {userInfo, userUpdate} from '../sources/server/user';
 
-export function updateUser(id, info) {
-  return hub.push('server.user.userInfo', {id, info})
-    .map(payload => {
-      // save to store
-      hub.dest('store.main').next({
-        mutation: 'user.saveInfo',
-        payload: payload
-      })
-      return payload
-    })
-}
+hub.addPipe('action.updateUser', ({id, info}) => {
+  Rx.Observable.of({id, info})
+    .concatMap(userUpdate)
+    .map(() => id)
+    .concatMap(userInfo);
+});

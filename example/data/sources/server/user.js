@@ -1,28 +1,31 @@
 import axios from 'axios'
 import Rx from 'rxjs'
 
-export function userInfo({id}) {
-  return Rx.Observable.from(
-    axios({
-      url: 'http://www.baidu.com',
-      method: 'get',
-      data: {
-        id,
-      }
-    }).then(response => {
-      return response.data
-    })
-  )
-}
+export let userInfo = (params) => {
+  let promsie = axios({
+    url: 'http://www.baidu.com',
+    method: 'get',
+    data: params
+  });
+  return Rx.Observable.from(promsie)
+};
 
-export function userList({page, count}) {
-  return Rx.Observable.from(
-    axios({
-      url: 'http://www.baidu.com',
-      method: 'get',
-      data: {page, count}
-    }).then(response => {
-      return response.data
-    })
-  )
-}
+export let userList = (params) => {
+  let  promsie = axios({
+    url: 'http://www.baidu.com',
+    method: 'get',
+    data: params
+  });
+  return Rx.Observable.from(promsie);
+};
+
+export let userUpdate = (data) => {
+  let  promsie = axios({
+    url: 'http://www.baidu.com',
+    method: 'post',
+    data: data
+  }).then(response => {
+    return response.data
+  });
+  return Rx.Observable.from(promsie);
+};

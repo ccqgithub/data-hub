@@ -1,42 +1,44 @@
-import Rx from 'rxjs'
-import invariant from './util/invariant'
+import Rx from 'rxjs';
+import invariant from './util/invariant';
 
-export default class DataHub {
+export default class Hub {
+  // constructor
   constructor(options={}) {
-    this._ins = {}
-    this._outs = {}
+    this._pipes = {};
+    this._middlewares = {
+      beforeSource: [],
+      afterSource: [],
+    };
+
+    // combinedMiddleware
+    this.combinedMiddleware = this.combinedMiddleware.bind(this);
   }
 
-  push(pipeName, payload) {
-    return this._ins[pipeName]
+  // get pipe
+  pipe(name) {
+    return this._pipes[name];
   }
 
-  addDest(pipeName, observer) {
-    let subject = new Rx.Subject()
-    subject.subscribe(observer)
-    this._ins[pipeName] = subject
-  }
-
-  addDests(context, observers) {
-    Object.keys(observers).forEach(key => {
-      this.registerIn(context + '.' + key, observers[key])
-    })
-  }
-
-  pull(pipeName, payload) {
-    let observable = this._outs[pipeName](payload)
-    return Rx.Observable.from(observable)
-  }
-
-  addSource(pipeName, fn) {
-    this._outs[pipeName] = (payload) => {
-      return fn(payload)
+  // add pipe
+  addPipe(name, sourceFn) {
+    this._pipes[name] = (payload) => {
+      return Rx.Observable.of(payload)
+        .map(this.combinedMiddleware())
+        .concatMap(sourceFn)
+        .map(this.combinedMiddleware());
     }
   }
 
-  addSources(context, fns) {
-    Object.keys(observables).forEach(key => {
-      this.registerOut(context + '.' + key, observables[key])
-    })
+  combinedMiddleware(type) {
+    return (payload) => {
+      this.middlewares[type].forEach(fn => {
+        payload = fn(payload);
+      });
+      return payload;
+    }
+  }
+
+  addMiddleware(fn, type) {
+    this._middlewares[type] = fn;
   }
 }
