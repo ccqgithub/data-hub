@@ -8,6 +8,7 @@ module.exports = {
     path: path.resolve(__dirname, "demos/dist"),
     filename: '[name].js'
   },
+  externals: ['rxjs'],
   module: {
     rules: [
       {
