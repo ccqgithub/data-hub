@@ -8,8 +8,5 @@
 .tags*
 node_modules
 
-/public
-/server/i18n/temp
-
 npm-debug.log*
 #yarn.lock

@@ -1,10 +1,27 @@
 {
-  "name": "data-hub",
+  "name": "rx-hub",
   "version": "1.0.0",
-  "description": "data hub",
+  "description": "> data hub",
   "main": "index.js",
+  "dependencies": {
+    "rxjs": "^5.4.2"
+  },
+  "devDependencies": {
+    "babel-core": "^6.25.0",
+    "babel-loader": "^7.1.1",
+    "babel-preset-env": "^1.6.0",
+    "babel-preset-react": "^6.24.1",
+    "babel-preset-stage-2": "^6.24.1",
+    "babel-preset-stage-3": "^6.24.1",
+    "react": "^15.6.1",
+    "react-dom": "^15.6.1",
+    "vue-loader": "^12.2.2",
+    "webpack": "^3.3.0"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack",
+    "build-demo": "webpack --config webpack.config.demo.js"
   },
   "repository": {
     "type": "git",
@@ -13,10 +30,7 @@
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/ccqgithub/data-hub/issues"
+    "url": "https://github.com/ccqgithub/rx-hub/issues"
   },
-  "homepage": "https://github.com/ccqgithub/data-hub#readme",
-  "dependencies": {
-    "rxjs": "^5.4.2"
-  }
+  "homepage": "https://github.com/ccqgithub/rx-hub#readme"
 }

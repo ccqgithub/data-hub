@@ -1,0 +1,13 @@
+{
+  "presets": [
+    "react",
+    ["env", {
+      "targets": {
+        "browsers": ["> 1%", "not ie <= 8"]
+      }
+    }],
+    "stage-2",
+    "stage-3"
+  ],
+  "plugins": []
+}

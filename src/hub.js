@@ -29,6 +29,16 @@ export default class Hub {
     }
   }
 
+  // add pipes
+  addPipes(context, pipeFns) {
+    Object.keys(pipeFns).forEach(key => {
+      let pipeFn = pipeFns[key];
+      let pipeName = context + '.' + key;
+      this.addPipe(pipeName, pipeFn);
+    });
+  }
+
+  // commine middlewares
   combinedMiddleware(type) {
     return (payload) => {
       this.middlewares[type].forEach(fn => {
@@ -38,6 +48,7 @@ export default class Hub {
     }
   }
 
+  // add middleware
   addMiddleware(fn, type) {
     this._middlewares[type] = fn;
   }
