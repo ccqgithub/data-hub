@@ -1,5 +1,5 @@
-import axios from 'axios'
-import Rx from 'rxjs'
+import axios from 'axios';
+import Rx from 'rxjs';
 
 export let userInfo = (params) => {
   let promsie = axios({

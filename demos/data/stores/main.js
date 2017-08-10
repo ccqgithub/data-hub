@@ -1,9 +1,11 @@
-import {Store} from 'data-hub'
-import user from './user'
+import {Store} from 'data-hub';
+import user from './modules/user';
 
 export default new Store({
   initialState: {
-    something: 'something'
+    user: {
+      username: 'season.chen'
+    }
   },
   modules: {
     user,
