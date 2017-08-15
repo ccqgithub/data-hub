@@ -23,9 +23,9 @@ export default class Hub {
   addPipe(name, sourceFn) {
     this._pipes[name] = (payload) => {
       return Rx.Observable.of(payload)
-        .map(this.combinedMiddleware())
+        .map(this.combinedMiddleware('beforeSource'))
         .concatMap(sourceFn)
-        .map(this.combinedMiddleware());
+        .map(this.combinedMiddleware('afterSource'));
     }
   }
 
@@ -41,7 +41,7 @@ export default class Hub {
   // commine middlewares
   combinedMiddleware(type) {
     return (payload) => {
-      this.middlewares[type].forEach(fn => {
+      this._middlewares[type].forEach(fn => {
         payload = fn(payload);
       });
       return payload;

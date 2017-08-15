@@ -1,11 +1,11 @@
 import Rx from 'rxjs';
 import invariant from './util/invariant';
 
-export class Store {
+export default class Store {
 
   // constructor
   constructor(options={}) {
-    this.check(options);
+    this._check(options);
 
     this.name = options.name || 'storeName';
     this._isDataHubStore = true;
@@ -21,26 +21,26 @@ export class Store {
       `Store options must be object!`
     );
 
+    let initialState = options.initialState || {};
     invariant(
-      options.initialState
-        && typeof options.initialState === 'object',
+      initialState && typeof initialState === 'object',
       `Store initialState must be object!`
     );
 
+    let mutations = options.mutations || {};
     invariant(
-      options.mutations
-        && typeof options.mutations === 'object',
+      mutations && typeof mutations === 'object',
       `Store mutations must be object!`
     )
 
+    let modules = options.modules || {};
     invariant(
-      options.modules
-        && typeof options.modules === 'object',
+      modules && typeof modules === 'object',
       `Store modules must be object!`
     );
 
-    Object.keys(options.modules).forEach(key => {
-      let module = options.modules[key];
+    Object.keys(modules).forEach(key => {
+      let module = modules[key];
       invariant(
         typeof module === 'object' && module._isDataHubStore,
         `Store module must be a store instance!`
@@ -57,8 +57,8 @@ export class Store {
   getState() {
     let state = this._state;
 
-    Object.keys(this.modules).forEach(moduleName => {
-      state[moduleName] = this.modules[moduleName].getState();
+    Object.keys(this._modules).forEach(moduleName => {
+      state[moduleName] = this._modules[moduleName].getState();
     });
 
     return state;
@@ -75,7 +75,7 @@ export class Store {
     // module
     if (arr.length > 1) {
       let moduleName = arr[0];
-      let module = this.modules[moduleName];
+      let module = this._modules[moduleName];
 
       invariant(
         module,

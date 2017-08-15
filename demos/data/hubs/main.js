@@ -8,8 +8,17 @@ const hub = new Hub();
 
 // store
 hub.addPipe('store.state', () => {
-  let subject = new Rx.Subject();
+  let state = mainStore.getState();
+  let subject = new Rx.BehaviorSubject(state);
   mainStore.subscribe(subject);
+  return subject;
+});
+
+hub.addPipe('store.commit', () => {
+  let subject = new Rx.Subject();
+  subject.subscribe(({mutation, payload}) => {
+    mainStore.commit(mutation, payload);
+  });
   return subject;
 });
 
