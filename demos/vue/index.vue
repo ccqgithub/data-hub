@@ -6,7 +6,7 @@
 
     <div class="filter">
       <input type="text" placeholder="关键字">
-      <button type="button" name="button">添加</button>
+      <button type="button" name="button" v-stream:click="addUser$">添加</button>
     </div>
 
     <table>
@@ -18,9 +18,9 @@
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td></td>
-          <td></td>
+        <tr v-for="user in state.user.list">
+          <td>{{user.id}}</td>
+          <td>{{user.name}}</td>
           <td></td>
         </tr>
       </tbody>
@@ -35,11 +35,38 @@ import hub from '../data/hubs/main';
 export default {
   data() {
     return {
-      users: [{}],
+      //
     }
   },
 
   subscriptions() {
+    this.addUser$ = new Rx.Subject();
+
+    this.addUser$
+      .map(() => {
+        return {
+          id: Date.now(),
+          name: 'user-' + Math.round(Math.random() * 1000),
+        }
+      })
+      // .concatMap(hub.pipe('action.user.addUser'))
+      .map(() => {
+        console.log('xxx')
+        return {
+          mutation: 'user.add',
+          payload: {
+            id: Date.now(),
+            name: 'user-' + Math.round(Math.random() * 1000000),
+          }
+        }
+      })
+      .concatMap(hub.pipe('store.commit'))
+      .subscribe(() => {
+        console.log('success')
+      }, (err) => {
+        console.log(err)
+      });
+
     return {
       state: hub.pipe('store.state')(),
     }

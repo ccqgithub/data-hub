@@ -14,12 +14,10 @@ hub.addPipe('store.state', () => {
   return subject;
 });
 
-hub.addPipe('store.commit', () => {
-  let subject = new Rx.Subject();
-  subject.subscribe(({mutation, payload}) => {
-    mainStore.commit(mutation, payload);
-  });
-  return subject;
+hub.addPipe('store.commit', ({mutation, payload}) => {
+  console.log('store.commit')
+  mainStore.commit(mutation, payload);
+  return Rx.Observable.of(1);
 });
 
 // actions

@@ -1,9 +1,12 @@
 import Rx from 'rxjs';
-import {userInfo, userUpdate} from '../server/user';
+import {userInfo, userUpdate, userAdd} from '../server/user';
 
-export let updateUser = ({id, info}) => {
+export let addUser = ({id, info}) => {
   return Rx.Observable.of({id, info})
-    .concatMap(userUpdate)
-    .map(() => id)
+    .concatMap(userAdd)
+    .map(() => {
+      console.log('addUser')
+      return {};
+    })
     .concatMap(userInfo);
 };

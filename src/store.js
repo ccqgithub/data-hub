@@ -83,15 +83,17 @@ export default class Store {
       );
 
       module.commit(arr[1], payload, location);
+
+      return;
     }
 
     // mutation
     invariant(
-      this.mutations[mutation],
+      this._mutations[mutation],
       `mutation <${location}> is not defined!`
     )
 
-    let mutationFunc = this.mutations[mutation].bind(this);
+    let mutationFunc = this._mutations[mutation].bind(this);
     mutationFunc(payload, this._state, this);
 
     // let observer know
