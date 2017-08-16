@@ -17,8 +17,8 @@ module.exports = {
   // externals: ['rxjs'],
   devServer: {
     open: true,
-    port: 8080,
-    contentBase: path.join(__dirname, "dist"),
+    port: 8181,
+    contentBase: path.resolve(__dirname, "./dist"),
   },
   resolve: {
     modules: [
@@ -26,7 +26,7 @@ module.exports = {
     ],
     extensions: ['.js', '.jsx', '.vue', '.json', '.css'],
     alias: {
-      'data-hub': path.resolve(__dirname, '../index.js'),
+      'data-hub': path.resolve(__dirname, '../dist/rx-hub.js'),
     }
   },
   module: {
