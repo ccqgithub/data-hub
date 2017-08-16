@@ -5,23 +5,6 @@ var HtmlWebpackPlugin = require('html-webpack-plugin');
 var PlaceAssetsPlugin = require('html-webpack-place-assets-plugin');
 var contextPath = path.resolve(__dirname);
 
-var babelLoaderOptions = {
-  loader: 'babel-loader',
-  options: {
-    'presets': [
-      'react',
-      ['env', {
-        'targets': {
-          'browsers': ['> 1%', 'ie >= 8']
-        },
-        useBuiltIns: true
-      }],
-      'stage-2',
-      'stage-3',
-    ],
-  }
-}
-
 module.exports = {
   context: contextPath,
   entry: {
@@ -39,10 +22,9 @@ module.exports = {
   },
   resolve: {
     modules: [
-      'node_modules',
-      path.resolve(contextPath, '../node_modules')
+      'node_modules'
     ],
-    extensions: ['.js', '.jsx', '.vue', '.json'],
+    extensions: ['.js', '.jsx', '.vue', '.json', '.css'],
     alias: {
       'data-hub': path.resolve(__dirname, '../index.js'),
     }
@@ -69,7 +51,7 @@ module.exports = {
         options: {
           loaders: {
             js: [
-              babelLoaderOptions
+              'babel-loader'
             ],
             css: [
               'vue-style-loader',
@@ -80,9 +62,6 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        include: [
-          //
-        ],
         use: [
           'style-loader',
           'css-loader'
@@ -90,20 +69,14 @@ module.exports = {
       },
       {
         test: /\.js$/,
-        include: [
-          //
-        ],
         use: [
-          babelLoaderOptions
+          'babel-loader'
         ]
       },
       {
         test: /\.jsx$/,
-        include: [
-          //
-        ],
         use: [
-          babelLoaderOptions
+          'babel-loader'
         ]
       },
     ]

@@ -15,7 +15,6 @@ hub.addPipe('store.state', () => {
 });
 
 hub.addPipe('store.commit', ({mutation, payload}) => {
-  console.log('store.commit')
   mainStore.commit(mutation, payload);
   return Rx.Observable.of(1);
 });

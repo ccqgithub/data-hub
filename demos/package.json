@@ -1,0 +1,42 @@
+{
+  "name": "demos",
+  "version": "1.0.0",
+  "description": "",
+  "main": "webpack.config.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "webpack-dev-server"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "rxjs": "^5.4.3",
+    "axios": "^0.16.2",
+    "nprogress": "^0.2.0",
+    "react": "^15.6.1",
+    "react-dom": "^15.6.1",
+    "rx-devtools": "0.0.1-alpha.54",
+    "vue": "^2.4.2",
+    "vue-rx": "^3.3.0"
+  },
+  "devDependencies": {
+    "babel-core": "^6.25.0",
+    "babel-loader": "^7.1.1",
+    "babel-preset-env": "^1.6.0",
+    "babel-preset-react": "^6.24.1",
+    "babel-preset-stage-2": "^6.24.1",
+    "babel-preset-stage-3": "^6.24.1",
+    "copy-webpack-plugin": "^4.0.1",
+    "css-loader": "^0.28.4",
+    "html-loader": "^0.5.1",
+    "html-webpack-place-assets-plugin": "^2.0.0",
+    "html-webpack-plugin": "^2.30.1",
+    "less": "^2.7.2",
+    "less-loader": "^4.0.5",
+    "style-loader": "^0.18.2",
+    "vue-loader": "^12.2.2",
+    "vue-template-compiler": "^2.4.2",
+    "webpack": "^3.3.0",
+    "webpack-dev-server": "^2.7.1"
+  }
+}

@@ -14,10 +14,11 @@ export default new Store({
       let index = -1;
 
       list.forEach((item, idx) => {
+        console.log(item.id, id)
         if (item.id == id) index = idx;
       });
 
-      state.list = list.splice(index, 1);
+      list.splice(index, 1);
     },
     update({id, newUser}, state) {
       let list = state.list;

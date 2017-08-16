@@ -99,4 +99,17 @@ export default class Store {
     // let observer know
     this._subject.next(this.getState());
   }
+
+  // store is also a observer
+  next({mutation, payload}) {
+    this.commit(mutation, payload);
+  }
+
+  error() {
+    //
+  }
+
+  complete() {
+    //
+  }
 }

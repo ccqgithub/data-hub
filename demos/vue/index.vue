@@ -5,8 +5,10 @@
     </div>
 
     <div class="filter">
-      <input type="text" placeholder="关键字">
-      <button type="button" name="button" v-stream:click="addUser$">添加</button>
+      <input type="text" placeholder="关键字" v-model="filter">
+      <button type="button" name="button" v-stream:click="addUser$">
+        添加
+      </button>
     </div>
 
     <table>
@@ -18,10 +20,12 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="user in state.user.list">
+        <tr v-for="user in filterUsers">
           <td>{{user.id}}</td>
           <td>{{user.name}}</td>
-          <td></td>
+          <td>
+            <button type="button" name="button" @click="del(user)">删除</button>
+          </td>
         </tr>
       </tbody>
     </table>
@@ -31,44 +35,86 @@
 <script>
 import Rx from 'rxjs';
 import hub from '../data/hubs/main';
+import NProgress from 'nprogress';
+import 'nprogress/nprogress.css';
 
 export default {
   data() {
     return {
-      //
+      filter: '',
+    }
+  },
+
+  computed: {
+    filterUsers() {
+      let users = this.state.user.list;
+      return users.filter(user => {
+        return user.name.indexOf(this.filter.trim()) != -1;
+      });
     }
   },
 
   subscriptions() {
-    this.addUser$ = new Rx.Subject();
+    let self = this;
 
+    this.addUser$ = new Rx.Subject();
     this.addUser$
       .map(() => {
-        return {
+        NProgress.start();
+
+        let user = {
           id: Date.now(),
-          name: 'user-' + Math.round(Math.random() * 1000),
+          name: 'user-' + Math.round(Math.random() * 1000000),
         }
+
+        console.log('click', user);
+
+        return user;
       })
-      // .concatMap(hub.pipe('action.user.addUser'))
-      .map(() => {
-        console.log('xxx')
+      .switchMap(hub.pipe('action.user.addUser'))
+      .map((user) => {
         return {
           mutation: 'user.add',
-          payload: {
-            id: Date.now(),
-            name: 'user-' + Math.round(Math.random() * 1000000),
-          }
+          payload: user
         }
       })
       .concatMap(hub.pipe('store.commit'))
       .subscribe(() => {
         console.log('success')
+        NProgress.done();
       }, (err) => {
-        console.log(err)
+        console.log(err);
+        NProgress.done();
       });
 
     return {
       state: hub.pipe('store.state')(),
+    }
+  },
+
+  methods: {
+    // 不用vue-rx的情况
+    del(user) {
+      if (this.subscriptionDeleteUser) {
+        this.subscriptionDeleteUser.unsubscribe();
+      }
+
+      this.subscriptionDeleteUser = Rx.Observable.of(user.id)
+        .map((id) => {
+          NProgress.start();
+          return {
+            mutation: 'user.delete',
+            payload: id
+          }
+        })
+        .concatMap(hub.pipe('store.commit'))
+        .subscribe(() => {
+          console.log('success')
+          NProgress.done();
+        }, (err) => {
+          console.log(err);
+          NProgress.done();
+        });
     }
   },
 
@@ -84,6 +130,31 @@ export default {
   margin: 0;
   box-sizing: border-box;
 }
+
+// NProgress
+// #nprogress {
+//   position: fixed;
+//   left: 0;
+//   top: 0;
+//   right: 0;
+//   bottom: 0;
+//   z-index: 9999;
+//   pointer-events: auto;
+//   background: rgba(0,0,0,.05);
+//
+//   .spinner {
+//     left: 50%;
+//   }
+//
+//   .spinner-icon {
+//     border-left-color: #fff;
+//     border-right-color: #fff;
+//   }
+//
+//   .bar {
+//     background: #fff;
+//   }
+// }
 
 .app {
   padding-top: 50px;
@@ -115,10 +186,13 @@ export default {
 
   button {
     float: right;
-    padding: 5px;
-    line-height: 20px;
-    cursor: pointer;
   }
+}
+
+button {
+  padding: 5px;
+  line-height: 20px;
+  cursor: pointer;
 }
 
 table {
