@@ -17,11 +17,12 @@
     "mocha": "^3.4.2",
     "rollup": "^0.45.2",
     "rollup-plugin-babel": "^2.7.1",
-    "rollup-plugin-istanbul": "^1.1.0"
+    "rollup-plugin-istanbul": "^1.1.0",
+    "rollup-watch": "^4.3.1"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "rollup --config"
+    "build": "rollup --config -w"
   },
   "repository": {
     "type": "git",

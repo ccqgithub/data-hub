@@ -7,15 +7,15 @@ export default class Hub {
   constructor(options={}) {
     this._pipes = {};
     this._middlewares = {
-      beforeSource: [],
-      afterSource: [],
+      before: [],
+      after: [],
     };
 
     // combinedMiddleware
     this.combinedMiddleware = this.combinedMiddleware.bind(this);
 
-    this.addMiddleware('beforeSource', logMiddleware);
-    this.addMiddleware('afterSource', logMiddleware);
+    this.addMiddleware('before', logMiddleware);
+    this.addMiddleware('after', logMiddleware);
   }
 
   // get pipe
@@ -27,9 +27,9 @@ export default class Hub {
   addPipe(name, sourceFn) {
     this._pipes[name] = (payload) => {
       return Rx.Observable.of(payload)
-        .map(this.combinedMiddleware('beforeSource', name, payload))
+        .concatMap(this.combinedMiddleware('before', name))
         .concatMap(sourceFn)
-        .map(this.combinedMiddleware('afterSource', name, payload));
+        .concatMap(this.combinedMiddleware('after', name));
     }
   }
 
@@ -43,17 +43,22 @@ export default class Hub {
   }
 
   // commine middlewares
-  combinedMiddleware(type, name, payload) {
+  combinedMiddleware(type, pipeName) {
     return (payload) => {
-      this._middlewares[type].forEach(fn => {
-        payload = fn(payload, name);
+      let observable = Rx.Observable.of({
+        payload,
+        pipeName,
+        type,
       });
-      return payload;
+      this._middlewares[type].forEach(fn => {
+        observable = observable.concatMap(fn);
+      });
+      return observable;
     }
   }
 
   // add middleware
-  addMiddleware(fn, type) {
-    this._middlewares[type] = fn;
+  addMiddleware(type, fn) {
+    this._middlewares[type].push(fn);
   }
 }

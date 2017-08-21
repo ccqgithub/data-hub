@@ -4,7 +4,7 @@
 	(factory((global['rx-hub'] = {}),global.Rx));
 }(this, (function (exports,Rx) { 'use strict';
 
-Rx = Rx && Rx.hasOwnProperty('default') ? Rx['default'] : Rx;
+var Rx__default = 'default' in Rx ? Rx['default'] : Rx;
 
 var NODE_ENV = process.env.NODE_ENV;
 
@@ -84,7 +84,7 @@ var Store = function () {
 
     this.name = options.name || 'storeName';
     this._isDataHubStore = true;
-    this._subject = new Rx.Subject();
+    this._subject = new Rx__default.Subject();
     this._state = options.initialState || {};
     this._mutations = options.mutations || {};
     this._modules = options.modules || {};
@@ -193,10 +193,21 @@ var Store = function () {
   return Store;
 }();
 
-function logMiddleware(payload, pipeName) {
-  console.log("pipe: " + pipeName);
-  console.log(payload);
-  return payload;
+function logMiddleware(_ref) {
+  var payload = _ref.payload,
+      pipeName = _ref.pipeName,
+      type = _ref.type;
+
+  var data = payload;
+
+  try {
+    var _data = JSON.parse(JSON.stringify(payload));
+  } catch (e) {
+    //
+  }
+  console.log('rx-hub log ~ ' + type + ' pipe <' + pipeName + '>:', data);
+
+  return Rx.Observable.of(payload);
 }
 
 var Hub = function () {
@@ -207,15 +218,15 @@ var Hub = function () {
 
     this._pipes = {};
     this._middlewares = {
-      beforeSource: [],
-      afterSource: []
+      before: [],
+      after: []
     };
 
     // combinedMiddleware
     this.combinedMiddleware = this.combinedMiddleware.bind(this);
 
-    this.addMiddleware('beforeSource', logMiddleware);
-    this.addMiddleware('afterSource', logMiddleware);
+    this.addMiddleware('before', logMiddleware);
+    this.addMiddleware('after', logMiddleware);
   }
 
   // get pipe
@@ -235,7 +246,7 @@ var Hub = function () {
       var _this = this;
 
       this._pipes[name] = function (payload) {
-        return Rx.Observable.of(payload).map(_this.combinedMiddleware('beforeSource', name, payload)).concatMap(sourceFn).map(_this.combinedMiddleware('afterSource', name, payload));
+        return Rx__default.Observable.of(payload).concatMap(_this.combinedMiddleware('before', name)).concatMap(sourceFn).concatMap(_this.combinedMiddleware('after', name));
       };
     }
 
@@ -257,14 +268,19 @@ var Hub = function () {
 
   }, {
     key: 'combinedMiddleware',
-    value: function combinedMiddleware(type, name, payload) {
+    value: function combinedMiddleware(type, pipeName) {
       var _this3 = this;
 
       return function (payload) {
-        _this3._middlewares[type].forEach(function (fn) {
-          payload = fn(payload, name);
+        var observable = Rx__default.Observable.of({
+          payload: payload,
+          pipeName: pipeName,
+          type: type
         });
-        return payload;
+        _this3._middlewares[type].forEach(function (fn) {
+          observable = observable.concatMap(fn);
+        });
+        return observable;
       };
     }
 
@@ -272,8 +288,8 @@ var Hub = function () {
 
   }, {
     key: 'addMiddleware',
-    value: function addMiddleware(fn, type) {
-      this._middlewares[type] = fn;
+    value: function addMiddleware(type, fn) {
+      this._middlewares[type].push(fn);
     }
   }]);
   return Hub;
