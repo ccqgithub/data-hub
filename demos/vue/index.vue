@@ -17,7 +17,7 @@
           <th>id</th>
           <th>用户名</th>
           <th>操作</th>
-        </tr>
+        </tr>  
       </thead>
       <tbody>
         <tr v-for="user in filterUsers">

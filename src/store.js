@@ -1,4 +1,4 @@
-import Rx from 'rxjs';
+import {Subject} from 'rxjs';
 import invariant from './util/invariant';
 
 export default class Store {
@@ -7,9 +7,9 @@ export default class Store {
   constructor(options={}) {
     this._check(options);
 
-    this.name = options.name || 'storeName';
-    this._isDataHubStore = true;
-    this._subject = new Rx.Subject();
+    this.name = options.name || 'rx-hub store';
+    this._isRxHubStore = true;
+    this._subject = new Subject();
     this._state = options.initialState || {};
     this._mutations = options.mutations || {};
     this._modules = options.modules || {};
@@ -18,32 +18,32 @@ export default class Store {
   _check(options) {
     invariant(
       typeof options === 'object',
-      `Store options must be object!`
+      `rx-hub sotre ~ options is not an object!`
     );
 
     let initialState = options.initialState || {};
     invariant(
       initialState && typeof initialState === 'object',
-      `Store initialState must be object!`
+      `rx-hub store ~ options.initialState is not an object!`
     );
 
     let mutations = options.mutations || {};
     invariant(
       mutations && typeof mutations === 'object',
-      `Store mutations must be object!`
+      `rx-hub store ~ options.mutations is not an object!`
     )
 
     let modules = options.modules || {};
     invariant(
       modules && typeof modules === 'object',
-      `Store modules must be object!`
+      `rx-hub store ~ options.modules is not an object!`
     );
 
     Object.keys(modules).forEach(key => {
       let module = modules[key];
       invariant(
-        typeof module === 'object' && module._isDataHubStore,
-        `Store module must be a store instance!`
+        typeof module === 'object' && module._isRxHubStore,
+        `rx-hub store ~ module must be a store instance!`
       );
     });
   }
@@ -79,7 +79,7 @@ export default class Store {
 
       invariant(
         module,
-        `module <${location}> is not defined!`
+        `rx-hub store ~ module <${location}> is not defined!`
       );
 
       module.commit(arr[1], payload, location);
@@ -90,7 +90,7 @@ export default class Store {
     // mutation
     invariant(
       this._mutations[mutation],
-      `mutation <${location}> is not defined!`
+      `rx-hub store ~ mutation <${location}> is not defined!`
     )
 
     let mutationFunc = this._mutations[mutation].bind(this);

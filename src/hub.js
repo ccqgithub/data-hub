@@ -1,21 +1,21 @@
-import Rx from 'rxjs';
+import {Observable} from 'rxjs';
 import invariant from './util/invariant';
 import logMiddleware from './middleware/log';
 
 export default class Hub {
   // constructor
   constructor(options={}) {
+    let beforeMiddlewares = options.beforeMiddlewares || [];
+    let afterMiddlewares = options.afterMiddlewares || [];
+
     this._pipes = {};
     this._middlewares = {
-      before: [],
-      after: [],
+      before: beforeMiddlewares,
+      after: afterMiddlewares,
     };
 
     // combinedMiddleware
     this.combinedMiddleware = this.combinedMiddleware.bind(this);
-
-    this.addMiddleware('before', logMiddleware);
-    this.addMiddleware('after', logMiddleware);
   }
 
   // get pipe
@@ -26,7 +26,7 @@ export default class Hub {
   // add pipe
   addPipe(name, sourceFn) {
     this._pipes[name] = (payload) => {
-      return Rx.Observable.of(payload)
+      return Observable.of(payload)
         .concatMap(this.combinedMiddleware('before', name))
         .concatMap(sourceFn)
         .concatMap(this.combinedMiddleware('after', name));
@@ -45,7 +45,7 @@ export default class Hub {
   // commine middlewares
   combinedMiddleware(type, pipeName) {
     return (payload) => {
-      let observable = Rx.Observable.of({
+      let observable = Observable.of({
         payload,
         pipeName,
         type,
