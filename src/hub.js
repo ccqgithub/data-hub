@@ -1,6 +1,5 @@
 import {Observable} from 'rxjs';
 import invariant from './util/invariant';
-import logMiddleware from './middleware/log';
 
 export default class Hub {
   // constructor
@@ -45,13 +44,15 @@ export default class Hub {
   // commine middlewares
   combinedMiddleware(type, pipeName) {
     return (payload) => {
-      let observable = Observable.of({
-        payload,
-        pipeName,
-        type,
-      });
+      let observable = Observable.of(payload);
       this._middlewares[type].forEach(fn => {
-        observable = observable.concatMap(fn);
+        observable = observable.map(payload => {
+          return {
+            payload,
+            pipeName,
+            type,
+          };
+        }).concatMap(fn);
       });
       return observable;
     }

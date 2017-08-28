@@ -1,10 +1,13 @@
-import {Hub} from 'data-hub';
+import {Hub, logMiddleware} from 'data-hub';
 import Rx from 'rxjs';
 import mainStore from '../stores/main';
 import * as userServers from '../pipes/server/user';
 import * as userActions from '../pipes/actions/user';
 
-const hub = new Hub();
+const hub = new Hub({
+  beforeMiddlewares: [logMiddleware],
+  afterMiddlewares: [logMiddleware],
+});
 
 // store
 hub.addPipe('store.state', () => {

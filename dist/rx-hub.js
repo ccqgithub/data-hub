@@ -2,9 +2,7 @@
 	typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('rxjs')) :
 	typeof define === 'function' && define.amd ? define(['exports', 'rxjs'], factory) :
 	(factory((global['rx-hub'] = {}),global.Rx));
-}(this, (function (exports,Rx) { 'use strict';
-
-var Rx__default = 'default' in Rx ? Rx['default'] : Rx;
+}(this, (function (exports,rxjs) { 'use strict';
 
 var NODE_ENV = process.env.NODE_ENV;
 
@@ -82,9 +80,9 @@ var Store = function () {
 
     this._check(options);
 
-    this.name = options.name || 'storeName';
-    this._isDataHubStore = true;
-    this._subject = new Rx__default.Subject();
+    this.name = options.name || 'rx-hub store';
+    this._isRxHubStore = true;
+    this._subject = new rxjs.Subject();
     this._state = options.initialState || {};
     this._mutations = options.mutations || {};
     this._modules = options.modules || {};
@@ -93,20 +91,20 @@ var Store = function () {
   createClass(Store, [{
     key: '_check',
     value: function _check(options) {
-      invariant((typeof options === 'undefined' ? 'undefined' : _typeof(options)) === 'object', 'Store options must be object!');
+      invariant((typeof options === 'undefined' ? 'undefined' : _typeof(options)) === 'object', 'rx-hub sotre ~ options is not an object!');
 
       var initialState = options.initialState || {};
-      invariant(initialState && (typeof initialState === 'undefined' ? 'undefined' : _typeof(initialState)) === 'object', 'Store initialState must be object!');
+      invariant(initialState && (typeof initialState === 'undefined' ? 'undefined' : _typeof(initialState)) === 'object', 'rx-hub store ~ options.initialState is not an object!');
 
       var mutations = options.mutations || {};
-      invariant(mutations && (typeof mutations === 'undefined' ? 'undefined' : _typeof(mutations)) === 'object', 'Store mutations must be object!');
+      invariant(mutations && (typeof mutations === 'undefined' ? 'undefined' : _typeof(mutations)) === 'object', 'rx-hub store ~ options.mutations is not an object!');
 
       var modules = options.modules || {};
-      invariant(modules && (typeof modules === 'undefined' ? 'undefined' : _typeof(modules)) === 'object', 'Store modules must be object!');
+      invariant(modules && (typeof modules === 'undefined' ? 'undefined' : _typeof(modules)) === 'object', 'rx-hub store ~ options.modules is not an object!');
 
       Object.keys(modules).forEach(function (key) {
         var module = modules[key];
-        invariant((typeof module === 'undefined' ? 'undefined' : _typeof(module)) === 'object' && module._isDataHubStore, 'Store module must be a store instance!');
+        invariant((typeof module === 'undefined' ? 'undefined' : _typeof(module)) === 'object' && module._isRxHubStore, 'rx-hub store ~ module must be a store instance!');
       });
     }
 
@@ -152,7 +150,7 @@ var Store = function () {
         var moduleName = arr[0];
         var module = this._modules[moduleName];
 
-        invariant(module, 'module <' + location + '> is not defined!');
+        invariant(module, 'rx-hub store ~ module <' + location + '> is not defined!');
 
         module.commit(arr[1], payload, location);
 
@@ -160,7 +158,7 @@ var Store = function () {
       }
 
       // mutation
-      invariant(this._mutations[mutation], 'mutation <' + location + '> is not defined!');
+      invariant(this._mutations[mutation], 'rx-hub store ~ mutation <' + location + '> is not defined!');
 
       var mutationFunc = this._mutations[mutation].bind(this);
       mutationFunc(payload, this._state, this);
@@ -193,40 +191,23 @@ var Store = function () {
   return Store;
 }();
 
-function logMiddleware(_ref) {
-  var payload = _ref.payload,
-      pipeName = _ref.pipeName,
-      type = _ref.type;
-
-  var data = payload;
-
-  try {
-    var _data = JSON.parse(JSON.stringify(payload));
-  } catch (e) {
-    //
-  }
-  console.log('rx-hub log ~ ' + type + ' pipe <' + pipeName + '>:', data);
-
-  return Rx.Observable.of(payload);
-}
-
 var Hub = function () {
   // constructor
   function Hub() {
     var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
     classCallCheck(this, Hub);
 
+    var beforeMiddlewares = options.beforeMiddlewares || [];
+    var afterMiddlewares = options.afterMiddlewares || [];
+
     this._pipes = {};
     this._middlewares = {
-      before: [],
-      after: []
+      before: beforeMiddlewares,
+      after: afterMiddlewares
     };
 
     // combinedMiddleware
     this.combinedMiddleware = this.combinedMiddleware.bind(this);
-
-    this.addMiddleware('before', logMiddleware);
-    this.addMiddleware('after', logMiddleware);
   }
 
   // get pipe
@@ -246,7 +227,7 @@ var Hub = function () {
       var _this = this;
 
       this._pipes[name] = function (payload) {
-        return Rx__default.Observable.of(payload).concatMap(_this.combinedMiddleware('before', name)).concatMap(sourceFn).concatMap(_this.combinedMiddleware('after', name));
+        return rxjs.Observable.of(payload).concatMap(_this.combinedMiddleware('before', name)).concatMap(sourceFn).concatMap(_this.combinedMiddleware('after', name));
       };
     }
 
@@ -272,13 +253,15 @@ var Hub = function () {
       var _this3 = this;
 
       return function (payload) {
-        var observable = Rx__default.Observable.of({
-          payload: payload,
-          pipeName: pipeName,
-          type: type
-        });
+        var observable = rxjs.Observable.of(payload);
         _this3._middlewares[type].forEach(function (fn) {
-          observable = observable.concatMap(fn);
+          observable = observable.map(function (payload) {
+            return {
+              payload: payload,
+              pipeName: pipeName,
+              type: type
+            };
+          }).concatMap(fn);
         });
         return observable;
       };
@@ -295,8 +278,26 @@ var Hub = function () {
   return Hub;
 }();
 
+function logMiddleware(_ref) {
+  var payload = _ref.payload,
+      pipeName = _ref.pipeName,
+      type = _ref.type;
+
+  var data = payload;
+
+  try {
+    var _data = JSON.parse(JSON.stringify(payload));
+  } catch (e) {
+    //
+  }
+  console.log('rx-hub log ~ ' + type + ' pipe <' + pipeName + '>:', data);
+
+  return rxjs.Observable.of(payload);
+}
+
 exports.Store = Store;
 exports.Hub = Hub;
+exports.logMiddleware = logMiddleware;
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
