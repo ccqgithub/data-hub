@@ -8,7 +8,7 @@
 
 ## Overview
 
-![rx-hub data flow](ccqgithub.github.io/res/imgs/rx-hub-flow.jpg).
+![rx-hub data flow](https://ccqgithub.github.io/res/imgs/rx-hub-flow.jpg).
 
 - `Hub`: 水流集散中心（数据中转中心），用来安装监听各种数据流动，所有的数据流必须经过此处。
 - `Pipe`: 水管（数据管道），安装在`Hub`之上，每一个`Pipe`可以将流入的数据进行变换，然后流出。
