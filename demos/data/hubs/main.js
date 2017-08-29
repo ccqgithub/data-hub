@@ -1,8 +1,8 @@
 import {Hub, logMiddleware} from 'data-hub';
 import Rx from 'rxjs';
 import mainStore from '../stores/main';
-import * as userServers from '../pipes/server/user';
-import * as userActions from '../pipes/actions/user';
+import * as userServers from '../converters/server/user';
+import * as userActions from '../converters/actions/user';
 
 const hub = new Hub({
   beforeMiddlewares: [logMiddleware],
