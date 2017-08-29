@@ -12,6 +12,7 @@
 - 数据集中通过`数据板`处理，数据流清晰，配合中间件`middleware`, 监控每一次数据流动变换。
 - 提供内置数据仓库`Store`。
 - 单向数据流。
+- 适用于绝大多数框架、场景，可以和vue、react等框架一起使用，或者单独使用。
 
 ## Overview
 
@@ -225,3 +226,14 @@ export default {
 ```
 
 ## API
+
+待补充
+
+## run demo
+
+```
+git clone https://github.com/ccqgithub/rx-hub.git
+cd rx-hub/demos
+npm install
+num run dev
+```
