@@ -6,6 +6,13 @@
 
 > 依赖[RxJS](https://github.com/ReactiveX/RxJS)。
 
+## Features
+
+- 使用`RxJS`数据流，具有RxJS的特性。
+- 数据集中通过`数据板`处理，数据流清晰，配合中间件`middleware`, 监控每一次数据流动变换。
+- 提供内置数据仓库`Store`。
+- 单向数据流。
+
 ## Overview
 
 ![rx-hub data flow](https://ccqgithub.github.io/res/imgs/rx-hub-flow.jpg).
@@ -205,10 +212,10 @@ export default {
         // 定义这条数据通道，以便知道何时成功失败
         .subscribe(() => {
           console.log('success')
-          NProgress.done();
+          // NProgress.done();
         }, (err) => {
           console.log(err);
-          NProgress.done();
+          // NProgress.done();
         });
     }
   }
