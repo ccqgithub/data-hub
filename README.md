@@ -39,14 +39,46 @@
 import axios from 'axios';
 import Rx from 'rxjs';
 
-export let addUser = (payload) => {
-  let promsie = axios({
-    url: 'http://api.mysite.com/userAdd',
-    method: 'post',
-    data: payload
+export let userDel = (userId) => {
+  let promise = new Promise((resolve, reject) => {
+    setTimeout(() => resolve(userId), 1000);
   });
- 
   return Rx.Observable.from(promise);
+};
+
+export let userAdd = (user) => {
+  // let  promsie = axios({
+  //   url: 'http://www.baidu.com',
+  //   method: 'post',
+  //   data: data
+  // }).then(response => {
+  //   return response.data
+  // });
+
+  let promise = new Promise((resolve, reject) => {
+    setTimeout(() => resolve(user), 1000);
+  });
+  return Rx.Observable.from(promise);
+};
+```
+
+```js
+// converters/store.js
+import {BehaviorSubject, Observable} from 'rxjs';
+import mainStore from '../stores/main';
+
+// 获取最新state
+export let getState = () => {
+  let state = mainStore.getState();
+  let subject = new BehaviorSubject(state);
+  mainStore.subscribe(subject);
+  return subject;
+};
+
+// 提交更改
+export let commit = ({mutation, payload}) => {
+  mainStore.commit(mutation, payload);
+  return Observable.of(payload);
 };
 ```
 
@@ -98,40 +130,19 @@ export default new Store({
 import {Hub, logMiddleware} from 'data-hub';
 import Rx from 'rxjs';
 import mainStore from '../stores/main';
-import * as userServers from '../converters/server/user';
-import * as userActions from '../converters/actions/user';
+import * as userServerConverters from '../converters/server/user';
+import * as storeConverters from '../converters/store';
 
-// 初始化hub，添加 log 中间件
 const hub = new Hub({
   beforeMiddlewares: [logMiddleware],
   afterMiddlewares: [logMiddleware],
 });
 
-// 添加一个管道获取 store state，监听store state变化
-hub.addPipe('store.state', () => {
-  let state = mainStore.getState();
-  let subject = new Rx.BehaviorSubject(state);
-  mainStore.subscribe(subject);
-  return subject;
-});
-
-// 添加一个管道 提交 sotre mutation
-hub.addPipe('store.commit', ({mutation, payload}) => {
-  mainStore.commit(mutation, payload);
-  return Rx.Observable.of(payload);
-});
+// actions
+hub.addPipes('server.user', userServerConverters);
 
 // server
-// hub.pipe('server.user.userAdd')
-// hub.pipe('server.user.userDelete')
-// ...
-hub.addPipes('server.user', userServers);
-
-// actions
-// hub.pipe('server.user.userAdd')
-// hub.pipe('server.user.userDelete')
-// ...
-hub.addPipes('action.user', userActions);
+hub.addPipes('store', storeConverters);
 
 export default hub;
 ```
@@ -140,89 +151,154 @@ export default hub;
 
 > 管道只提供数据转换的通道，最终我们要做的，就是讲这些管道组织起来，使数据从源头经过设定好的路线，流向目的地。
 
+index.html:
+
 ```html
-<!-- index.vue -->
+<div class="app" id="app">
+    <div class="topBar">
+      user: username
+    </div>
 
-<template lang="html">
-  <div class="app">
-    <button type="button" name="button" @click="add">
-      添加
-    </button>
+    <div class="filter">
+      <input type="text" placeholder="关键字" name="filter" id="filter">
+      <button type="button" name="button" id="search">
+        添加
+      </button>
+    </div>
 
-    <table>
+    <table id="table">
       <thead>
         <tr>
           <th>id</th>
           <th>用户名</th>
+          <th>操作</th>
         </tr>  
       </thead>
       <tbody>
-        <tr v-for="user in users">
-          <td>{{user.id}}</td>
-          <td>{{user.name}}</td>
-        </tr>
+        
       </tbody>
     </table>
   </div>
-</template>
+```
 
-<script>
-import Rx from 'rxjs';
+index.js: 
+
+```js
 import hub from '../data/hubs/main';
+import {Observable} from 'rxjs';
+import NProgress from 'nprogress';
+import 'nprogress/nprogress.css';
+import "../style/style.less";
 
-export default {
-  data() {
-    return {
-      users: []
-    }
-  },
+let $app = document.getElementById('app');
+let $filter = document.getElementById('filter');
+let $btn = document.getElementById('search');
+let $table = document.getElementById('table');
 
-  mounted() {
-    let stateObservable = hub.pipe('store.state')();
-    stateObservable.subscribe(state => {
-      this.users = state.user.list;
-    });
-  }
+let userList = [];
+let userListAfterFilter = userList;
 
-  methods: {
-    // 不用vue-rx的情况
-    add() {
-      // 如果上一次点击流正在流动中，则终止它
-      if (this.subscriptionAddUser) {
-        this.subscriptionAddUser.unsubscribe();
-      }
-
-      let newUser = {
-        id: Date.now(),
-        name: 'user-' + Math.round(Math.random() * 1000000),
-      };
-
-      this.subscriptionAddUser = Rx.Observable.of(newUser)
-        // 经过管道`action.user.AddUser`提交服务器添加用户
-        .concatMap(hub.pipe('action.user.AddUser'))
-        // 组装数据，方便流向后续的管道
-        .map((addedUser) => {
-          // NProgress.start();
-          return {
-            mutation: 'user.add',
-            payload: addedUser
-          }
-        })
-        // 提交 store，使该user数据在store中删除
-        .concatMap(hub.pipe('store.commit'))
-        // 定义这条数据通道，以便知道何时成功失败
-        .subscribe(() => {
-          console.log('success')
-          // NProgress.done();
-        }, (err) => {
-          console.log(err);
-          // NProgress.done();
-        });
-    }
-  }
+function filter(list) {
+  let filter = $filter.value.trim();
+  return userList.filter(user => {
+    return user.name.indexOf(filter) != -1;
+  });
 }
-</script>
 
+// rerender table
+function updateTable() {
+  let $rows = userListAfterFilter
+    .map((user, i) => {
+      return `
+        <tr>
+          <td>${user.id}</td>
+          <td>${user.name}</td>
+          <td>
+            <button type="button" name="button" data-index="${i}">删除</button>
+          </td>
+        </tr>
+      `;
+    });
+  
+  // bind delete user
+  $table.querySelector('tbody').innerHTML = $rows.join('');
+  $table.querySelectorAll('tr > td > button').forEach(($btn, index) => {
+    // delete
+    Observable.fromEvent($btn, 'click')
+      .pluck('target')
+      .map(target => {
+        let i = target.getAttribute('data-index');
+        let u = userListAfterFilter[i];
+
+        NProgress.start();
+
+        return u.id;
+      })
+      .switchMap(hub.pipe('server.user.userDel'))
+      .map(id => {
+        return {
+          mutation: 'user.delete',
+          payload: id
+        }
+      })
+      .concatMap(hub.pipe('store.commit'))
+      .subscribe(() => {
+        console.log('success')
+        NProgress.done();
+      }, (err) => {
+        console.log(err);
+        NProgress.done();
+      });
+  });
+}
+
+// watch state change
+Observable.of({})
+  .concatMap(hub.pipe('store.getState'))
+  .subscribe((state) => {
+    userList = state.user.list;
+    userListAfterFilter = filter(userList);
+    updateTable();
+  });
+
+// filter input
+Observable.fromEvent($filter, 'input')
+  .debounceTime(500)
+  .subscribe(() => {
+    userListAfterFilter = filter(userList);
+    updateTable();
+  });
+
+// add new user
+let addUserSubscription;
+$btn.addEventListener('click', () => {
+  // unsubscibe
+  if (addUserSubscription) addUserSubscription.unsubscribe();
+
+  let user = {
+    id: Date.now(),
+    name: 'user-' + Math.round(Math.random() * 1000000),
+  }
+
+  NProgress.start();
+
+  addUserSubscription = Observable.of(user)
+  .switchMap(hub.pipe('server.user.userAdd'))
+  .map((user) => {
+    return {
+      mutation: 'user.add',
+      payload: user
+    }
+  })
+  .concatMap(hub.pipe('store.commit'))
+  .subscribe(() => {
+    console.log('success')
+    NProgress.done();
+  }, (err) => {
+    console.log(err);
+    NProgress.done();
+  });
+});
 ```
 
 ## API

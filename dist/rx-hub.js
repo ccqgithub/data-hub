@@ -154,6 +154,9 @@ var Store = function () {
 
         module.commit(arr[1], payload, location);
 
+        // let observer know
+        this._subject.next(this.getState());
+
         return;
       }
 
@@ -216,6 +219,7 @@ var Hub = function () {
   createClass(Hub, [{
     key: 'pipe',
     value: function pipe(name) {
+      invariant(typeof this._pipes[name] === 'function', 'rx-hub hub ~ pipe <' + name + '> is undefined or not function!');
       return this._pipes[name];
     }
 

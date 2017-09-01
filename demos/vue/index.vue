@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import Rx from 'rxjs';
+import {Observable, Subject} from 'rxjs';
 import hub from '../data/hubs/main';
 import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
@@ -57,7 +57,7 @@ export default {
   subscriptions() {
     let self = this;
 
-    this.addUser$ = new Rx.Subject();
+    this.addUser$ = new Subject();
     this.addUser$
       .map(() => {
         NProgress.start();
@@ -71,7 +71,7 @@ export default {
 
         return user;
       })
-      .switchMap(hub.pipe('action.user.addUser'))
+      .switchMap(hub.pipe('server.user.userAdd'))
       .map((user) => {
         return {
           mutation: 'user.add',
@@ -88,7 +88,7 @@ export default {
       });
 
     return {
-      state: hub.pipe('store.state')(),
+      state: Observable.of({}).concatMap(hub.pipe('store.getState')),
     }
   },
 
@@ -99,7 +99,8 @@ export default {
         this.subscriptionDeleteUser.unsubscribe();
       }
 
-      this.subscriptionDeleteUser = Rx.Observable.of(user.id)
+      this.subscriptionDeleteUser = Observable.of(user.id)
+        .concatMap(hub.pipe('server.user.userDel'))
         .map((id) => {
           NProgress.start();
           return {
@@ -123,92 +124,3 @@ export default {
   }
 }
 </script>
-
-<style lang="less">
-* {
-  padding: 0;
-  margin: 0;
-  box-sizing: border-box;
-}
-
-// NProgress
-// #nprogress {
-//   position: fixed;
-//   left: 0;
-//   top: 0;
-//   right: 0;
-//   bottom: 0;
-//   z-index: 9999;
-//   pointer-events: auto;
-//   background: rgba(0,0,0,.05);
-//
-//   .spinner {
-//     left: 50%;
-//   }
-//
-//   .spinner-icon {
-//     border-left-color: #fff;
-//     border-right-color: #fff;
-//   }
-//
-//   .bar {
-//     background: #fff;
-//   }
-// }
-
-.app {
-  padding-top: 50px;
-}
-
-.topBar {
-  position: fixed;
-  top: 0;
-  right: 0;
-  left: 0;
-  height: 50px;
-  background: #00d1b2;
-  color: #fff;
-  line-height: 30px;
-  padding: 10px;
-}
-
-.filter {
-  padding: 10px;
-  width: 600px;
-  margin: 20px auto;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-
-  input {
-    padding: 5px;
-    line-height: 20px;
-  }
-
-  button {
-    float: right;
-  }
-}
-
-button {
-  padding: 5px;
-  line-height: 20px;
-  cursor: pointer;
-}
-
-table {
-  width: 600px;
-  margin: 20px auto;
-  border: 1px solid #ddd;
-  table-layout: fixed;
-  border-collapse: collapse;
-
-  td, th {
-    padding: 5px;
-    border: 1px solid #ddd;
-  }
-
-  th {
-    background: #ccc;
-  }
-}
-</style>

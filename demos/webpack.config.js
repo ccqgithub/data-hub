@@ -8,7 +8,9 @@ var contextPath = path.resolve(__dirname);
 module.exports = {
   context: contextPath,
   entry: {
-    'index': './js/vue.js'
+    'index': './js/index.js',
+    'vue': './js/vue.js',
+    'react': './js/react.js'
   },
   output: {
     path: path.resolve(__dirname, "dist"),
@@ -56,6 +58,11 @@ module.exports = {
             css: [
               'vue-style-loader',
               'css-loader'
+            ],
+            less: [
+              'vue-style-loader',
+              'css-loader',
+              'less-loader'
             ]
           }
         }
@@ -65,6 +72,14 @@ module.exports = {
         use: [
           'style-loader',
           'css-loader'
+        ]
+      },
+      {
+        test: /\.less$/,
+        use: [
+          'style-loader',
+          'css-loader',
+          'less-loader'
         ]
       },
       {
@@ -83,9 +98,23 @@ module.exports = {
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: './vue.html',
+      template: './index.html',
       filename: 'index.html',
       chunks: ['index'],
+      chunksSortMode: 'dependency', //'dependency',
+      inject: false
+    }),
+    new HtmlWebpackPlugin({
+      template: './vue.html',
+      filename: 'vue.html',
+      chunks: ['vue'],
+      chunksSortMode: 'dependency', //'dependency',
+      inject: false
+    }),
+    new HtmlWebpackPlugin({
+      template: './react.html',
+      filename: 'react.html',
+      chunks: ['react'],
       chunksSortMode: 'dependency', //'dependency',
       inject: false
     }),

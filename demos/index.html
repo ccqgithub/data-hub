@@ -2,30 +2,35 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>test rxjs</title>
+  <title>rx-hub with simple javascript</title>
+  <!-- html-webpack-plugin-css -->
 </head>
 <body>
+  <div class="app" id="app">
+    <div class="topBar">
+      user: username
+    </div>
 
-  <script src="https://unpkg.com/rxjs/bundles/Rx.min.js"></script>
-  <script>
-  var subject = new Rx.Subject();
+    <div class="filter">
+      <input type="text" placeholder="关键字" name="filter" id="filter">
+      <button type="button" name="button" id="search">
+        添加
+      </button>
+    </div>
 
-  subject.subscribe({
-    next: (v) => console.log('observerA: ' + v)
-  });
-  subject.subscribe({
-    next: (v) => console.log('observerB: ' + v)
-  });
-
-  subject.next(1);
-  subject.next(2);
-
-  subject.subscribe({
-    next: (v) => console.log('observerC: ' + v)
-  });
-
-  subject.next(3);
-
-  </script>
+    <table id="table">
+      <thead>
+        <tr>
+          <th>id</th>
+          <th>用户名</th>
+          <th>操作</th>
+        </tr>  
+      </thead>
+      <tbody>
+        
+      </tbody>
+    </table>
+  </div>
+  <!-- html-webpack-plugin-script -->
 </body>
 </html>

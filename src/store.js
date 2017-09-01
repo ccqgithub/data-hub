@@ -84,6 +84,9 @@ export default class Store {
 
       module.commit(arr[1], payload, location);
 
+      // let observer know
+      this._subject.next(this.getState());
+
       return;
     }
 
