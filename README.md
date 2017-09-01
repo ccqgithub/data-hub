@@ -6,6 +6,10 @@
 
 > 依赖[RxJS](https://github.com/ReactiveX/RxJS)。
 
+## !Issues
+
+> 暂未稳定中，还在完善，最好不要用于生产环境
+
 ## Features
 
 - 使用`RxJS`数据流，具有RxJS的特性。
