@@ -6,6 +6,8 @@
 
 > 依赖[RxJS](https://github.com/ReactiveX/RxJS)。
 
+[TOC]
+
 ## !Issues
 
 > 暂未稳定中，还在完善，最好不要用于生产环境
