@@ -10,7 +10,7 @@ module.exports = {
   entry: {
     'index': './js/index.js',
     'vue': './js/vue.js',
-    'react': './js/react.js'
+    'react': './js/react.jsx'
   },
   output: {
     path: path.resolve(__dirname, "dist"),

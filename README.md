@@ -16,7 +16,7 @@
 - 数据集中通过`数据板`处理，数据流清晰，配合中间件`middleware`, 监控每一次数据流动变换。
 - 提供内置数据仓库`Store`。
 - 单向数据流。
-- 适用于绝大多数框架、场景，可以和vue、react等框架一起使用，或者单独使用。
+- 适用于绝大多数框架，同一份数据可以同时用于原生js、vue、react等页面……
 
 ## Overview
 
@@ -309,7 +309,9 @@ $btn.addEventListener('click', () => {
 
 待补充
 
-## run demo
+## run demo 
+
+> 已经为您提供了`原生js`、`vue`、`react`三个版本的demo，三个demo共用一份数据，你可以查看`demos`目录中的源码以了解更多细节。
 
 ```
 git clone https://github.com/ccqgithub/rx-hub.git
@@ -317,3 +319,7 @@ cd rx-hub/demos
 npm install
 num run dev
 ```
+
+- 原生js： http://localhost:8181/index.html
+- vue: http://localhost:8181/vue.html
+- react: http://localhost:8181/index.html

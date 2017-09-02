@@ -10,25 +10,20 @@ let $btn = document.getElementById('search');
 let $table = document.getElementById('table');
 
 let userList = [];
-let userListAfterFilter = userList;
-
-function filter(list) {
-  let filter = $filter.value.trim();
-  return userList.filter(user => {
-    return user.name.indexOf(filter) != -1;
-  });
-}
 
 // rerender table
 function updateTable() {
-  let $rows = userListAfterFilter
+  let filter = $filter.value.trim();
+    let $rows = userList.filter(user => {
+      return user.name.indexOf(filter) != -1;
+    })
     .map((user, i) => {
       return `
         <tr>
           <td>${user.id}</td>
           <td>${user.name}</td>
           <td>
-            <button type="button" name="button" data-index="${i}">删除</button>
+            <button type="button" name="button" data-id="${user.id}">删除</button>
           </td>
         </tr>
       `;
@@ -41,12 +36,11 @@ function updateTable() {
     Observable.fromEvent($btn, 'click')
       .pluck('target')
       .map(target => {
-        let i = target.getAttribute('data-index');
-        let u = userListAfterFilter[i];
+        let id = target.getAttribute('data-id');
 
         NProgress.start();
 
-        return u.id;
+        return id;
       })
       .switchMap(hub.pipe('server.user.userDel'))
       .map(id => {
@@ -71,7 +65,6 @@ Observable.of({})
   .concatMap(hub.pipe('store.getState'))
   .subscribe((state) => {
     userList = state.user.list;
-    userListAfterFilter = filter(userList);
     updateTable();
   });
 
@@ -79,7 +72,6 @@ Observable.of({})
 Observable.fromEvent($filter, 'input')
   .debounceTime(500)
   .subscribe(() => {
-    userListAfterFilter = filter(userList);
     updateTable();
   });
 
