@@ -4,11 +4,13 @@
 
 > 数据从`数据源`流出（比如一个点击事件流），在不同的`水管`中流动变换，最终流向`目的地`(比如界面UI)。
 
-> 依赖[RxJS](https://github.com/ReactiveX/RxJS)。
+> 依赖[RxJS 5](https://github.com/ReactiveX/RxJS)。
 
-## !Issues
+## Issues
 
-> 暂未稳定中，还在完善，最好不要用于生产环境
+- 目前暂未稳定中，还在完善，最好不要用于生产环境。
+- 依赖[RxJS 5](https://github.com/ReactiveX/RxJS), `rx-hub`安装包不包含`rxjs`, 需要单独安装`npm install rxjs@5.x -S`。
+- 兼容性：和`RxJs`一样，支持`ie9+`和当前的主流浏览器，具体请查看RxJS的兼容性。
 
 ## Features
 
