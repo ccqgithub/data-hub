@@ -34,6 +34,24 @@
 
 - `Observable`: **可观察的数据流**，RxJS中的主要概念，也是`rx-hub`中的数据流，可以订阅。
 
+## Reference directory structure 
+
+- `Root`
+  - `style`
+  - `entry`
+  - `lib`
+  - `data`: 数据管理
+    - `converters`
+      - `server`
+        - `user.js`
+      - `store.js`
+    - `hubs`
+      - `main.js`
+    - `stores`
+      - `main.js`
+      - `modules`
+       - `user.js`
+
 ## Getting started
 
 > install 
