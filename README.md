@@ -22,7 +22,7 @@
 
 ## Overview
 
-![rx-hub data flow](https://ccqgithub.github.io/res/imgs/rx-hub-flow.jpg).
+![rx-hub data flow](https://ccqgithub.github.io/res/imgs/rx-hub.jpg).
 
 概念
 
