@@ -6,17 +6,19 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "webpack-dev-server --config webpack.config.js",
+    "dev2": "cross-env RX_HUB=debug webpack-dev-server --config webpack.config.js",
     "build": "webpack --config webpack.config.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "rxjs": "^5.4.3",
     "axios": "^0.16.2",
     "nprogress": "^0.2.0",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
     "rx-devtools": "0.0.1-alpha.54",
+    "rx-hub": "^1.0.2",
+    "rxjs": "^5.4.3",
     "vue": "^2.4.2",
     "vue-rx": "^3.3.0"
   },
@@ -28,6 +30,7 @@
     "babel-preset-stage-2": "^6.24.1",
     "babel-preset-stage-3": "^6.24.1",
     "copy-webpack-plugin": "^4.0.1",
+    "cross-env": "^5.0.5",
     "css-loader": "^0.28.4",
     "html-loader": "^0.5.1",
     "html-webpack-place-assets-plugin": "^2.0.0",

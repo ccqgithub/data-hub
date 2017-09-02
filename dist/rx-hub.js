@@ -288,13 +288,18 @@ function logMiddleware(_ref) {
       type = _ref.type;
 
   var data = payload;
+  var typeMsg = {
+    before: 'in',
+    after: 'out'
+  }[type];
 
   try {
     var _data = JSON.parse(JSON.stringify(payload));
   } catch (e) {
     //
   }
-  console.log('rx-hub log ~ ' + type + ' pipe <' + pipeName + '>:', data);
+
+  console.log('rx-hub log ~ pipe ' + typeMsg + ' <' + pipeName + '>:', data);
 
   return rxjs.Observable.of(payload);
 }

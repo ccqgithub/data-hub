@@ -2,7 +2,12 @@ import babel from 'rollup-plugin-babel';
 // import istanbul from 'rollup-plugin-istanbul';
 
 let pkg = require('./package.json');
-let external = Object.keys(pkg.dependencies);
+let external = [];
+
+// external dependencies
+external = external.concat(Object.keys(pkg.dependencies || {}));
+// external peer dependencies
+external = external.concat(Object.keys(pkg.peerDependencies || {}));
 
 let plugins = [
   babel({

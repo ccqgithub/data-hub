@@ -5,6 +5,8 @@ var HtmlWebpackPlugin = require('html-webpack-plugin');
 var PlaceAssetsPlugin = require('html-webpack-place-assets-plugin');
 var contextPath = path.resolve(__dirname);
 
+const RX_HUB = process.env.RX_HUB;
+
 module.exports = {
   context: contextPath,
   entry: {
@@ -27,9 +29,9 @@ module.exports = {
       'node_modules'
     ],
     extensions: ['.js', '.jsx', '.vue', '.json', '.css'],
-    alias: {
-      'data-hub': path.resolve(__dirname, '../dist/rx-hub.js'),
-    }
+    alias: RX_HUB == 'debug' ? {
+      'rx-hub': path.resolve(__dirname, '../dist/rx-hub.js'),
+    } : {}
   },
   module: {
     rules: [
