@@ -8,7 +8,6 @@
 
 ## Issues
 
-- 目前暂未稳定中，还在完善，最好不要用于生产环境。
 - 依赖[RxJS 5](https://github.com/ReactiveX/RxJS), `rx-hub`安装包不包含`rxjs`, 需要单独安装`npm install rxjs@5.x -S`。
 - 兼容性：和`RxJs`一样，支持`ie9+`和当前的主流浏览器，具体请查看RxJS的兼容性。
 
