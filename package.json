@@ -3,7 +3,7 @@
   "version": "1.0.1",
   "description": "> data hub",
   "main": "dist/rx-hub.js",
-  "dependencies": {
+  "peerDependencies": {
     "rxjs": "^5.4.3"
   },
   "devDependencies": {

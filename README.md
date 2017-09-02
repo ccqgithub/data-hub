@@ -32,11 +32,24 @@
 
 - `Observable`: **可观察的数据流**，RxJS中的主要概念，也是`rx-hub`中的数据流，可以订阅。
 
-## Get Start
+## Getting started
 
-1. 定义`Converter`。 
+> install 
 
-> 每个`Converter`是一个函数，接受一个数据`payload`, 返回一个新的`Observable`对象。
+```sh
+# install rx-hub
+npm install rx-hub -S
+
+# install rxjs, rx-hub have a peerDependencies of rxjs@5.x
+npm install rxjs@5.x -S
+
+# import
+import {Hub, Store, logMiddleware} from 'data-hub';
+```
+
+> 定义`Converter`。 
+
+每个`Converter`是一个函数，接受一个数据`payload`, 返回一个新的`Observable`对象。
 
 ```js
 // converters/server/user.js
@@ -86,9 +99,9 @@ export let commit = ({mutation, payload}) => {
 };
 ```
 
-2. 定义一个`Store`. 
+> 定义一个`Store`. 
 
-> `Store`用来长时间存储数据，类似现实生活中的`水池`。 `Store`可以包含子模块`modules`, 每个子模块都是一个`Store`实例。
+`Store`用来长时间存储数据，类似现实生活中的`水池`。 `Store`可以包含子模块`modules`, 每个子模块都是一个`Store`实例。
 
 ```js
 // sotres/main.js
@@ -124,9 +137,9 @@ export default new Store({
 });
 ```
 
-3. 初始一个`Hub`实例。
+> 初始一个`Hub`实例。
 
-> `hub`是一个数据板，sotre, ui, server 等等数据交换都流经hub。在数据板上添加各种管道`Pipe`, 可以单个添加和批量添加。
+`hub`是一个数据板，sotre, ui, server 等等数据交换都流经hub。在数据板上添加各种管道`Pipe`, 可以单个添加和批量添加。
 
 ```js
 // hubs/main.js
@@ -151,9 +164,9 @@ hub.addPipes('store', storeConverters);
 export default hub;
 ```
 
-4. 连接管道，拼接成数据的流动路线。
+> 连接管道，拼接成数据的流动路线。
 
-> 管道只提供数据转换的通道，最终我们要做的，就是讲这些管道组织起来，使数据从源头经过设定好的路线，流向目的地。
+管道只提供数据转换的通道，最终我们要做的，就是讲这些管道组织起来，使数据从源头经过设定好的路线，流向目的地。
 
 index.html:
 
