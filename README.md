@@ -36,21 +36,26 @@
 
 ## Reference directory structure 
 
-- `Root`
-  - `style`
-  - `entry`
-  - `lib`
-  - `data`: 数据管理
-    - `converters`
-      - `server`
-        - `user.js`
-      - `store.js`
-    - `hubs`
-      - `main.js`
-    - `stores`
-      - `main.js`
-      - `modules`
-       - `user.js`
+```
+|
+|---- `style`
+|---- `entry`
+|---- `lib`
+|---- `data`: 数据管理
+| |---- `converters`
+  | |---- `server`
+  | | |---- `user.js`
+  | |
+  | |---- `store.js`
+  |
+  |---- `hubs`
+  | |---- `main.js`
+  |
+  |---- `stores`
+  | |---- `main.js`
+    |---- `modules`
+      |- `user.js`
+```
 
 ## Getting started
 
