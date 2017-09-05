@@ -27,21 +27,21 @@ export default class Hub {
   }
 
   // add pipe
-  addPipe(name, sourceFn) {
+  addPipe(name, converter) {
     this._pipes[name] = (payload) => {
       return Observable.of(payload)
         .concatMap(this.combinedMiddleware('before', name))
-        .concatMap(sourceFn)
+        .concatMap(converter)
         .concatMap(this.combinedMiddleware('after', name));
     }
   }
 
   // add pipes
-  addPipes(context, pipeFns) {
-    Object.keys(pipeFns).forEach(key => {
-      let pipeFn = pipeFns[key];
+  addPipes(context, converters) {
+    Object.keys(converters).forEach(key => {
+      let converter = converters[key];
       let pipeName = context + '.' + key;
-      this.addPipe(pipeName, pipeFn);
+      this.addPipe(pipeName, converter);
     });
   }
 
@@ -63,7 +63,7 @@ export default class Hub {
   }
 
   // add middleware
-  addMiddleware(type, fn) {
-    this._middlewares[type].push(fn);
+  addMiddleware(type, middleware) {
+    this._middlewares[type].push(middleware);
   }
 }

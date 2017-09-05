@@ -227,11 +227,11 @@ var Hub = function () {
 
   }, {
     key: 'addPipe',
-    value: function addPipe(name, sourceFn) {
+    value: function addPipe(name, converter) {
       var _this = this;
 
       this._pipes[name] = function (payload) {
-        return rxjs.Observable.of(payload).concatMap(_this.combinedMiddleware('before', name)).concatMap(sourceFn).concatMap(_this.combinedMiddleware('after', name));
+        return rxjs.Observable.of(payload).concatMap(_this.combinedMiddleware('before', name)).concatMap(converter).concatMap(_this.combinedMiddleware('after', name));
       };
     }
 
@@ -239,13 +239,13 @@ var Hub = function () {
 
   }, {
     key: 'addPipes',
-    value: function addPipes(context, pipeFns) {
+    value: function addPipes(context, converters) {
       var _this2 = this;
 
-      Object.keys(pipeFns).forEach(function (key) {
-        var pipeFn = pipeFns[key];
+      Object.keys(converters).forEach(function (key) {
+        var converter = converters[key];
         var pipeName = context + '.' + key;
-        _this2.addPipe(pipeName, pipeFn);
+        _this2.addPipe(pipeName, converter);
       });
     }
 
@@ -275,8 +275,8 @@ var Hub = function () {
 
   }, {
     key: 'addMiddleware',
-    value: function addMiddleware(type, fn) {
-      this._middlewares[type].push(fn);
+    value: function addMiddleware(type, middleware) {
+      this._middlewares[type].push(middleware);
     }
   }]);
   return Hub;
