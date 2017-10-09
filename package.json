@@ -1,10 +1,10 @@
 {
   "name": "rx-hub",
-  "version": "1.0.4",
+  "version": "5.0.0",
   "description": "> data hub",
   "main": "dist/rx-hub.js",
   "peerDependencies": {
-    "rxjs": "^5.4.3"
+    "rxjs": "^5.0.0"
   },
   "devDependencies": {
     "babel-core": "^6.25.0",

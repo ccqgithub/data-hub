@@ -8,6 +8,7 @@ let external = [];
 external = external.concat(Object.keys(pkg.dependencies || {}));
 // external peer dependencies
 external = external.concat(Object.keys(pkg.peerDependencies || {}));
+external = external.concat(['rxjs/Observable', 'rxjs/Subject']);
 
 let plugins = [
   babel({
@@ -26,12 +27,12 @@ export default {
   entry: 'index.js',
   plugins: plugins,
   external: external,
-  sourceMap: true,
   dest: pkg.main,
   format: 'umd',
   moduleName: 'rx-hub',
   sourceMap: true,
   globals: {
-    rxjs: 'Rx'
+    'rxjs/Observable': 'Rx.Observable',
+    'rxjs/Subject': 'Rx.Subject'
   }
 };

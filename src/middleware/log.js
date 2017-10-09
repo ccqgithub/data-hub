@@ -1,4 +1,4 @@
-import {Observable} from 'rxjs';
+import {Observable} from 'rxjs/Observable';
 
 export default function logMiddleware({payload, pipeName, type}) {
   let data = payload;
@@ -12,7 +12,7 @@ export default function logMiddleware({payload, pipeName, type}) {
   } catch(e) {
     //
   }
-  
+
   console.log(`rx-hub log ~ pipe ${typeMsg} <${pipeName}>:`, data);
 
   return Observable.of(payload);

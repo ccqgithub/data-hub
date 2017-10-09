@@ -33,7 +33,7 @@
 
 - `Observable`: **可观察的数据流**，RxJS中的主要概念，也是`rx-hub`中的数据流，可以订阅。
 
-## Reference directory structure 
+## Reference directory structure
 
 ```
 |
@@ -58,7 +58,7 @@
 
 ## Getting started
 
-> install 
+> install
 
 ```sh
 # install rx-hub
@@ -67,11 +67,17 @@ npm install rx-hub -S
 # install rxjs, rx-hub have a peerDependencies of rxjs@5.x
 npm install rxjs@5.x -S
 
-# import
+# 使用编译后的模块
 import {Hub, Store, logMiddleware} from 'data-hub';
+
+# 或者使用es6模块：
+import Hub from 'data-hub/src/hub';
+import Store from 'data-hub/src/store';
+import logMiddleware from 'data-hub/src/middleware/log';
 ```
 
-> 定义`Converter`。 
+
+> 定义`Converter`。
 
 每个`Converter`是一个函数，接受一个数据`payload`, 返回一个新的`Observable`对象。
 
@@ -123,7 +129,7 @@ export let commit = ({mutation, payload}) => {
 };
 ```
 
-> 定义一个`Store`. 
+> 定义一个`Store`.
 
 `Store`用来长时间存储数据，类似现实生活中的`水池`。 `Store`可以包含子模块`modules`, 每个子模块都是一个`Store`实例。
 
@@ -213,16 +219,16 @@ index.html:
           <th>id</th>
           <th>用户名</th>
           <th>操作</th>
-        </tr>  
+        </tr>
       </thead>
       <tbody>
-        
+
       </tbody>
     </table>
   </div>
 ```
 
-index.js: 
+index.js:
 
 ```js
 import hub from '../data/hubs/main';
@@ -260,7 +266,7 @@ function updateTable() {
         </tr>
       `;
     });
-  
+
   // bind delete user
   $table.querySelector('tbody').innerHTML = $rows.join('');
   $table.querySelectorAll('tr > td > button').forEach(($btn, index) => {
@@ -346,7 +352,7 @@ $btn.addEventListener('click', () => {
 
 [API文档](docs/zh-CN/api.md).
 
-## run demo 
+## run demo
 
 > 已经为您提供了`原生js`、`vue`、`react`三个版本的demo，三个demo共用一份数据，你可以查看`demos`目录中的源码以了解更多细节。
 

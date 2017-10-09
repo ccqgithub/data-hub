@@ -1,8 +1,8 @@
 (function (global, factory) {
-	typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('rxjs')) :
-	typeof define === 'function' && define.amd ? define(['exports', 'rxjs'], factory) :
-	(factory((global['rx-hub'] = {}),global.Rx));
-}(this, (function (exports,rxjs) { 'use strict';
+	typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('rxjs/Subject'), require('rxjs/Observable')) :
+	typeof define === 'function' && define.amd ? define(['exports', 'rxjs/Subject', 'rxjs/Observable'], factory) :
+	(factory((global['rx-hub'] = {}),global.Rx.Subject,global.Rx.Observable));
+}(this, (function (exports,rxjs_Subject,rxjs_Observable) { 'use strict';
 
 var NODE_ENV = process.env.NODE_ENV;
 
@@ -82,7 +82,7 @@ var Store = function () {
 
     this.name = options.name || 'rx-hub store';
     this._isRxHubStore = true;
-    this._subject = new rxjs.Subject();
+    this._subject = new rxjs_Subject.Subject();
     this._state = options.initialState || {};
     this._mutations = options.mutations || {};
     this._modules = options.modules || {};
@@ -231,7 +231,7 @@ var Hub = function () {
       var _this = this;
 
       this._pipes[name] = function (payload) {
-        return rxjs.Observable.of(payload).concatMap(_this.combinedMiddleware('before', name)).concatMap(converter).concatMap(_this.combinedMiddleware('after', name));
+        return rxjs_Observable.Observable.of(payload).concatMap(_this.combinedMiddleware('before', name)).concatMap(converter).concatMap(_this.combinedMiddleware('after', name));
       };
     }
 
@@ -257,7 +257,7 @@ var Hub = function () {
       var _this3 = this;
 
       return function (payload) {
-        var observable = rxjs.Observable.of(payload);
+        var observable = rxjs_Observable.Observable.of(payload);
         _this3._middlewares[type].forEach(function (fn) {
           observable = observable.map(function (payload) {
             return {
@@ -301,7 +301,7 @@ function logMiddleware(_ref) {
 
   console.log('rx-hub log ~ pipe ' + typeMsg + ' <' + pipeName + '>:', data);
 
-  return rxjs.Observable.of(payload);
+  return rxjs_Observable.Observable.of(payload);
 }
 
 exports.Store = Store;

@@ -1,4 +1,4 @@
-import {Subject} from 'rxjs';
+import {Subject} from 'rxjs/Subject';
 import invariant from './util/invariant';
 
 export default class Store {
