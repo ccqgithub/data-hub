@@ -1,4 +1,4 @@
-import {Subject} from 'rxjs/Subject';
+import Rx from 'rxjs/Rx';
 import invariant from './util/invariant';
 
 export default class Store {
@@ -9,7 +9,7 @@ export default class Store {
 
     this.name = options.name || 'rx-hub store';
     this._isRxHubStore = true;
-    this._subject = new Subject();
+    this._subject = new Rx.Subject();
     this._state = options.initialState || {};
     this._mutations = options.mutations || {};
     this._modules = options.modules || {};

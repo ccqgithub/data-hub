@@ -1,10 +1,10 @@
-(function (global, factory) {
-	typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('rxjs/Rx')) :
-	typeof define === 'function' && define.amd ? define(['exports', 'rxjs/Rx'], factory) :
-	(factory((global['rx-hub'] = {}),global.Rx));
-}(this, (function (exports,Rx) { 'use strict';
+'use strict';
 
-Rx = Rx && Rx.hasOwnProperty('default') ? Rx['default'] : Rx;
+Object.defineProperty(exports, '__esModule', { value: true });
+
+function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'default' in ex) ? ex['default'] : ex; }
+
+var Rx = _interopDefault(require('rxjs/Rx'));
 
 var NODE_ENV = process.env.NODE_ENV;
 
@@ -309,8 +309,4 @@ function logMiddleware(_ref) {
 exports.Store = Store;
 exports.Hub = Hub;
 exports.logMiddleware = logMiddleware;
-
-Object.defineProperty(exports, '__esModule', { value: true });
-
-})));
-//# sourceMappingURL=rx-hub.js.map
+//# sourceMappingURL=rx-hub.common.js.map
