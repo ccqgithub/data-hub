@@ -6,6 +6,11 @@
 
 > 依赖[RxJS 5](https://github.com/ReactiveX/RxJS)。
 
+## guide
+
+- 用 `sotre` 存储和取数据。
+- 用 `hub` 控制数据流。
+
 ## Issues
 
 - 依赖[RxJS 5](https://github.com/ReactiveX/RxJS), `rx-hub`安装包不包含`rxjs`, 需要单独安装`npm install rxjs@5.x -S`。
