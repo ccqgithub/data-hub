@@ -232,10 +232,14 @@ index.js:
 
 ```js
 import hub from '../data/hubs/main';
+import store from '../data/stores/main';
 import {Observable} from 'rxjs';
 import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
 import "../style/style.less";
+
+// store state
+console.log(store.getState());
 
 let $app = document.getElementById('app');
 let $filter = document.getElementById('filter');

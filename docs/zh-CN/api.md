@@ -146,6 +146,8 @@ const hub = new Hub({
   });
   ```
 
+- `store.getState()`: 获取store的状态。
+
 - `observable.subscribe(store)`: sotre 也可以作为观察者来进行变更数据, 数据流传入的数据格式必须是{payload, mutation}。
 
   ```js
