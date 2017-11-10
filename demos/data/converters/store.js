@@ -3,7 +3,7 @@ import mainStore from '../stores/main';
 
 // 获取最新state
 export let getState = () => {
-  let state = mainStore.getState();
+  let state = mainStore.state;
   let subject = new BehaviorSubject(state);
   mainStore.subscribe(subject);
   return subject;

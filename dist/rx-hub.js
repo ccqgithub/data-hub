@@ -92,46 +92,38 @@ var defineProperty = function (obj, key, value) {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-var toConsumableArray = function (arr) {
-  if (Array.isArray(arr)) {
-    for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) arr2[i] = arr[i];
-
-    return arr2;
-  } else {
-    return Array.from(arr);
+var inherits = function (subClass, superClass) {
+  if (typeof superClass !== "function" && superClass !== null) {
+    throw new TypeError("Super expression must either be null or a function, not " + typeof superClass);
   }
+
+  subClass.prototype = Object.create(superClass && superClass.prototype, {
+    constructor: {
+      value: subClass,
+      enumerable: false,
+      writable: true,
+      configurable: true
+    }
+  });
+  if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
+};
+
+
+
+
+
+
+
+
+
+
+
+var possibleConstructorReturn = function (self, call) {
+  if (!self) {
+    throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
+  }
+
+  return call && (typeof call === "object" || typeof call === "function") ? call : self;
 };
 
 var Store = function () {
@@ -175,8 +167,10 @@ var Store = function () {
 
   }, {
     key: 'subscribe',
-    value: function subscribe(observer) {
-      return this._subject.subscribe(observer);
+    value: function subscribe() {
+      var _subject;
+
+      return (_subject = this._subject).subscribe.apply(_subject, arguments);
     }
 
     // state
@@ -356,6 +350,7 @@ var Hub = function () {
 var VuePlugin = {};
 
 VuePlugin.install = function (Vue, options) {
+
   var storeOptionKey = options.storeOptionKey || 'store';
   var storeKey = options.storeKey || '$store';
   var hubOptionKey = options.hubOptionKey || 'hub';
@@ -366,9 +361,6 @@ VuePlugin.install = function (Vue, options) {
   // mixin
   Vue.mixin({
     data: function data() {
-      return defineProperty({}, stateKey, null);
-    },
-    beforeCreate: function beforeCreate() {
       var vm = this;
       var options = vm.$options;
       var store = options[storeOptionKey];
@@ -377,8 +369,6 @@ VuePlugin.install = function (Vue, options) {
       // store injection
       if (store) {
         vm[storeKey] = typeof store === 'function' ? store() : store;
-        // state injection
-        vm[stateKey] = vm[storeKey].state;
       } else if (options.parent && options.parent[storeKey]) {
         vm[storeKey] = options.parent[storeKey];
       }
@@ -392,38 +382,41 @@ VuePlugin.install = function (Vue, options) {
 
       // subscriptions
       vm[subscriptionsKey] = {};
-    },
-    beforeDestroy: function beforeDestroy() {
-      var vm = this;
 
-      try {
-        var _iteratorNormalCompletion = true;
-        var _didIteratorError = false;
-        var _iteratorError = undefined;
+      // injection data with state
+      return defineProperty({}, stateKey, vm[storeKey] ? vm[storeKey].state : null);
+    },
+
+
+    methods: {
+      $unsubscribe: function $unsubscribe(key) {
+        var vm = this;
+        var subscriptions = vm[subscriptionsKey];
 
         try {
-          for (var _iterator = vm[subscriptionsKey][Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-            var subscription = _step.value;
+          // unsubscribe one
+          if (key) {
+            if (subscriptions[key] && typeof subscriptions[key].unsubscribe === 'function') {
+              subscriptions[key].unsubscribe();
+            }
+            return;
+          }
 
-            subscription.unsubscribe();
-          }
-        } catch (err) {
-          _didIteratorError = true;
-          _iteratorError = err;
-        } finally {
-          try {
-            if (!_iteratorNormalCompletion && _iterator.return) {
-              _iterator.return();
+          // unsubscribe all
+          Object.keys(subscriptions).forEach(function (key) {
+            var subscription = subscriptions[key];
+            if (subscription && typeof subscription.unsubscribe === 'function') {
+              subscription.unsubscribe();
             }
-          } finally {
-            if (_didIteratorError) {
-              throw _iteratorError;
-            }
-          }
+          });
+        } catch (e) {
+          console.log(e);
         }
-      } catch (e) {
-        console.error(e);
       }
+    },
+
+    beforeDestroy: function beforeDestroy() {
+      this.$unsubscribe();
     }
   });
 };
@@ -450,35 +443,76 @@ function logMiddleware(_ref) {
   return rxjs_Rx.Observable.of(payload);
 }
 
-function connectReact(_ref, React) {
+function createRxHubComponent(_ref, React) {
   var store = _ref.store,
       hub = _ref.hub,
       _ref$storeKey = _ref.storeKey,
-      storeKey = _ref$storeKey === undefined ? 'store' : _ref$storeKey,
+      storeKey = _ref$storeKey === undefined ? '$store' : _ref$storeKey,
       _ref$hubKey = _ref.hubKey,
-      hubKey = _ref$hubKey === undefined ? 'hub' : _ref$hubKey;
+      hubKey = _ref$hubKey === undefined ? '$hub' : _ref$hubKey,
+      _ref$subscriptionsKey = _ref.subscriptionsKey,
+      subscriptionsKey = _ref$subscriptionsKey === undefined ? '$subs' : _ref$subscriptionsKey,
+      _ref$unsubscribeKey = _ref.unsubscribeKey,
+      unsubscribeKey = _ref$unsubscribeKey === undefined ? '$unsubscribe' : _ref$unsubscribeKey;
 
+  var RxHubComponent = function (_React$Component) {
+    inherits(RxHubComponent, _React$Component);
 
-  // connect function
-  return function (Compnent) {
-    // connected component
-    function ConnectComponent(props) {
+    function RxHubComponent(props) {
+      classCallCheck(this, RxHubComponent);
 
-      if (!props[storeKey]) props[storeKey] = store;
-      if (!props[hubKey]) props[hubKey] = store;
+      var _this = possibleConstructorReturn(this, (RxHubComponent.__proto__ || Object.getPrototypeOf(RxHubComponent)).call(this, props));
 
-      return React.createElement(Compnent, [props], [].concat(toConsumableArray(props.children)));
+      _this[storeKey] = store;
+      _this[hubKey] = hub;
+      _this[subscriptionsKey] = {};
+
+      // unsubscribe
+      _this[unsubscribeKey] = function (key) {
+        var subscriptions = _this[subscriptionsKey];
+
+        try {
+          // remove one
+          if (key) {
+            if (subscriptions[key] && typeof subscriptions[key].unsubscribe === 'function') {
+              subscriptions[key].unsubscribe();
+            }
+            return;
+          }
+
+          // remove all
+          Object.keys(subscriptions).forEach(function (key) {
+            var subscription = subscriptions[key];
+            if (typeof subscription.unsubscribe === 'function') {
+              subscription.unsubscribe();
+            }
+          });
+        } catch (e) {
+          console.error(e);
+        }
+      };
+      return _this;
     }
 
-    return ConnectComponent;
-  };
+    createClass(RxHubComponent, [{
+      key: 'componentWillUnMount',
+      value: function componentWillUnMount() {
+        this[unsubscribeKey]();
+      }
+    }]);
+    return RxHubComponent;
+  }(React.Component);
+
+  
+
+  return RxHubComponent;
 }
 
 exports.Store = Store;
 exports.Hub = Hub;
 exports.VuePlugin = VuePlugin;
 exports.logMiddleware = logMiddleware;
-exports.connectReact = connectReact;
+exports.createRxHubComponent = createRxHubComponent;
 
 Object.defineProperty(exports, '__esModule', { value: true });
 

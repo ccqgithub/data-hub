@@ -1,6 +1,7 @@
 const VuePlugin = {};
 
 VuePlugin.install = function(Vue, options) {
+
   let storeOptionKey = options.storeOptionKey || 'store';
   let storeKey = options.storeKey || '$store';
   let hubOptionKey = options.hubOptionKey || 'hub';
@@ -11,12 +12,6 @@ VuePlugin.install = function(Vue, options) {
   // mixin
   Vue.mixin({
     data() {
-      return {
-        [stateKey]: null
-      }
-    },
-
-    beforeCreate() {
       const vm = this;
       const options = vm.$options;
       const store = options[storeOptionKey];
@@ -25,8 +20,6 @@ VuePlugin.install = function(Vue, options) {
       // store injection
       if (store) {
         vm[storeKey] = typeof store === 'function' ? store() : store;
-        // state injection
-        vm[stateKey] = vm[storeKey].state;
       } else if (options.parent && options.parent[storeKey]) {
         vm[storeKey] = options.parent[storeKey];
       }
@@ -40,18 +33,45 @@ VuePlugin.install = function(Vue, options) {
 
       // subscriptions
       vm[subscriptionsKey] = {};
+
+      // injection data with state
+      return {
+        [stateKey]: vm[storeKey] ? vm[storeKey].state : null,
+      }
+    },
+
+    methods: {
+      $unsubscribe(key) {
+        const vm = this;
+        const subscriptions = vm[subscriptionsKey];
+
+        try {
+          // unsubscribe one
+          if (key) {
+            if (
+              subscriptions[key]
+              && typeof subscriptions[key].unsubscribe === 'function'
+            ) {
+              subscriptions[key].unsubscribe();
+            }
+            return;
+          }
+
+          // unsubscribe all
+          Object.keys(subscriptions).forEach(key => {
+            let subscription = subscriptions[key];
+            if (subscription && typeof subscription.unsubscribe === 'function') {
+              subscription.unsubscribe();
+            }
+          });
+        } catch(e) {
+          console.log(e);
+        }
+      }
     },
 
     beforeDestroy() {
-      const vm = this;
-
-      try {
-        for (let subscription of vm[subscriptionsKey]) {
-          subscription.unsubscribe();
-        }
-      } catch(e) {
-        console.error(e);
-      }
+      this.$unsubscribe();
     }
   });
 }

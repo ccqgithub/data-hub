@@ -1,17 +1,11 @@
 import Vue from 'vue';
 import Rx from 'rxjs/Rx';
-import VueRx from 'vue-rx';
+import {VuePlugin} from 'rx-hub';
 import Index from '../vue/index';
 import "../style/style.less";
 
-import { setupRxDevtools } from 'rx-devtools/rx-devtools';
-import 'rx-devtools/add/operator/debug';
-setupRxDevtools();
-
-Vue.use(VueRx, Rx);
+Vue.use(VuePlugin, {});
 
 const Com = Vue.extend(Index);
 
-new Com({
-  //
-}).$mount('#app');
+new Com().$mount('#app');

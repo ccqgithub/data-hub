@@ -49,8 +49,8 @@ export default class Store {
   }
 
   // subscribe
-  subscribe(observer) {
-    return this._subject.subscribe(observer);
+  subscribe(...args) {
+    return this._subject.subscribe(...args);
   }
 
   // state
