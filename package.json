@@ -24,10 +24,11 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "docs": "cd docs && gitbook install && gitbook serve",
+    "docs:deploy": "cd docs && ./deploy.sh",
     "build-cjs": "rollup -w -c rollup.config.js --environment TARGET:cjs",
     "build-dev": "rollup -w -c rollup.config.js --environment TARGET:umd",
-    "build-prod": "rollup -w -c rollup.config.js --environment TARGET:umd-prod",
-    "book": "gitbook build"
+    "build-prod": "rollup -w -c rollup.config.js --environment TARGET:umd-prod"
   },
   "repository": {
     "type": "git",
