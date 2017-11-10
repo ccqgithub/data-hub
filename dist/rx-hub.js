@@ -2,9 +2,7 @@
 	typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('rxjs/Rx')) :
 	typeof define === 'function' && define.amd ? define(['exports', 'rxjs/Rx'], factory) :
 	(factory((global['rx-hub'] = {}),global.Rx));
-}(this, (function (exports,Rx) { 'use strict';
-
-Rx = Rx && Rx.hasOwnProperty('default') ? Rx['default'] : Rx;
+}(this, (function (exports,rxjs_Rx) { 'use strict';
 
 var NODE_ENV = process.env.NODE_ENV;
 
@@ -73,6 +71,69 @@ var createClass = function () {
   };
 }();
 
+
+
+
+
+var defineProperty = function (obj, key, value) {
+  if (key in obj) {
+    Object.defineProperty(obj, key, {
+      value: value,
+      enumerable: true,
+      configurable: true,
+      writable: true
+    });
+  } else {
+    obj[key] = value;
+  }
+
+  return obj;
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+var toConsumableArray = function (arr) {
+  if (Array.isArray(arr)) {
+    for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) arr2[i] = arr[i];
+
+    return arr2;
+  } else {
+    return Array.from(arr);
+  }
+};
+
 var Store = function () {
 
   // constructor
@@ -84,7 +145,7 @@ var Store = function () {
 
     this.name = options.name || 'rx-hub store';
     this._isRxHubStore = true;
-    this._subject = new Rx.Subject();
+    this._subject = new rxjs_Rx.Subject();
     this._state = options.initialState || {};
     this._mutations = options.mutations || {};
     this._modules = options.modules || {};
@@ -118,10 +179,13 @@ var Store = function () {
       return this._subject.subscribe(observer);
     }
 
-    // get store's state
+    // state
 
   }, {
     key: 'getState',
+
+
+    // get store's state
     value: function getState() {
       var _this = this;
 
@@ -192,6 +256,11 @@ var Store = function () {
     value: function complete() {
       //
     }
+  }, {
+    key: 'state',
+    get: function get$$1() {
+      return this.getState();
+    }
   }]);
   return Store;
 }();
@@ -233,7 +302,7 @@ var Hub = function () {
       var _this = this;
 
       this._pipes[name] = function (payload) {
-        return Rx.Observable.of(payload).concatMap(_this.combinedMiddleware('before', name)).concatMap(converter).concatMap(_this.combinedMiddleware('after', name));
+        return rxjs_Rx.Observable.of(payload).concatMap(_this.combinedMiddleware('before', name)).concatMap(converter).concatMap(_this.combinedMiddleware('after', name));
       };
     }
 
@@ -259,7 +328,7 @@ var Hub = function () {
       var _this3 = this;
 
       return function (payload) {
-        var observable = Rx.Observable.of(payload);
+        var observable = rxjs_Rx.Observable.of(payload);
         _this3._middlewares[type].forEach(function (fn) {
           observable = observable.map(function (payload) {
             return {
@@ -284,6 +353,81 @@ var Hub = function () {
   return Hub;
 }();
 
+var VuePlugin = {};
+
+VuePlugin.install = function (Vue, options) {
+  var storeOptionKey = options.storeOptionKey || 'store';
+  var storeKey = options.storeKey || '$store';
+  var hubOptionKey = options.hubOptionKey || 'hub';
+  var hubKey = options.hubKey || '$hub';
+  var stateKey = options.stateKey || 'state';
+  var subscriptionsKey = options.subscriptionsKey || '$subs';
+
+  // mixin
+  Vue.mixin({
+    data: function data() {
+      return defineProperty({}, stateKey, null);
+    },
+    beforeCreate: function beforeCreate() {
+      var vm = this;
+      var options = vm.$options;
+      var store = options[storeOptionKey];
+      var hub = options[hubOptionKey];
+
+      // store injection
+      if (store) {
+        vm[storeKey] = typeof store === 'function' ? store() : store;
+        // state injection
+        vm[stateKey] = vm[storeKey].state;
+      } else if (options.parent && options.parent[storeKey]) {
+        vm[storeKey] = options.parent[storeKey];
+      }
+
+      // hub injection
+      if (hub) {
+        vm[hubKey] = typeof hub === 'function' ? hub() : hub;
+      } else if (options.parent && options.parent[hubKey]) {
+        vm[hubKey] = options.parent[hubKey];
+      }
+
+      // subscriptions
+      vm[subscriptionsKey] = {};
+    },
+    beforeDestroy: function beforeDestroy() {
+      var vm = this;
+
+      try {
+        var _iteratorNormalCompletion = true;
+        var _didIteratorError = false;
+        var _iteratorError = undefined;
+
+        try {
+          for (var _iterator = vm[subscriptionsKey][Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+            var subscription = _step.value;
+
+            subscription.unsubscribe();
+          }
+        } catch (err) {
+          _didIteratorError = true;
+          _iteratorError = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion && _iterator.return) {
+              _iterator.return();
+            }
+          } finally {
+            if (_didIteratorError) {
+              throw _iteratorError;
+            }
+          }
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    }
+  });
+};
+
 function logMiddleware(_ref) {
   var payload = _ref.payload,
       pipeName = _ref.pipeName,
@@ -303,12 +447,38 @@ function logMiddleware(_ref) {
 
   console.log('rx-hub log ~ pipe ' + typeMsg + ' <' + pipeName + '>:', data);
 
-  return Rx.Observable.of(payload);
+  return rxjs_Rx.Observable.of(payload);
+}
+
+function connectReact(_ref, React) {
+  var store = _ref.store,
+      hub = _ref.hub,
+      _ref$storeKey = _ref.storeKey,
+      storeKey = _ref$storeKey === undefined ? 'store' : _ref$storeKey,
+      _ref$hubKey = _ref.hubKey,
+      hubKey = _ref$hubKey === undefined ? 'hub' : _ref$hubKey;
+
+
+  // connect function
+  return function (Compnent) {
+    // connected component
+    function ConnectComponent(props) {
+
+      if (!props[storeKey]) props[storeKey] = store;
+      if (!props[hubKey]) props[hubKey] = store;
+
+      return React.createElement(Compnent, [props], [].concat(toConsumableArray(props.children)));
+    }
+
+    return ConnectComponent;
+  };
 }
 
 exports.Store = Store;
 exports.Hub = Hub;
+exports.VuePlugin = VuePlugin;
 exports.logMiddleware = logMiddleware;
+exports.connectReact = connectReact;
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
