@@ -4,7 +4,7 @@
 	(factory((global['rx-hub'] = {}),global.Rx));
 }(this, (function (exports,rxjs_Rx) { 'use strict';
 
-var NODE_ENV = process.env.NODE_ENV;
+var NODE_ENV = "development";
 
 var invariant = function (condition, format, a, b, c, d, e, f) {
   if (NODE_ENV !== 'production') {

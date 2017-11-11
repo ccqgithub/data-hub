@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import {Observable, Subject} from 'rxjs';
+import {Observable, Subject} from 'rxjs/Rx';
 import hub from '../data/hubs/main';
 import store from '../data/stores/main';
 import NProgress from 'nprogress';

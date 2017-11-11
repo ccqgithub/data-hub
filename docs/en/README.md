@@ -1,1 +1,1 @@
-{% include "./SUMMARY.md" %}
+## rx-hub

@@ -38,6 +38,9 @@ if (TARGET == 'cjs') {
 } else if (TARGET == 'umd') {
   config.dest = 'dist/rx-hub.js';
   config.format = 'umd';
+  config.plugins.push(replace({
+    'process.env.NODE_ENV': JSON.stringify('development')
+  }));
 } else if (TARGET == 'umd-prod') {
   config.dest = 'dist/rx-hub.min.js';
   config.format = 'umd';

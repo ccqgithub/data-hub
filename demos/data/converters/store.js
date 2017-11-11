@@ -1,4 +1,4 @@
-import {BehaviorSubject, Observable} from 'rxjs';
+import {BehaviorSubject, Observable} from 'rxjs/Rx';
 import mainStore from '../stores/main';
 
 // 获取最新state

@@ -1,8 +1,8 @@
 {
   "name": "rx-hub",
-  "version": "5.2.0",
+  "version": "5.2.1",
   "description": "> data hub",
-  "main": "dist/rx-hub.js",
+  "main": "index.js",
   "peerDependencies": {
     "rxjs": "^5.0.0"
   },

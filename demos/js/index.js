@@ -1,5 +1,5 @@
 import hub from '../data/hubs/main';
-import {Observable} from 'rxjs';
+import {Observable} from 'rxjs/Rx';
 import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
 import "../style/style.less";
@@ -28,7 +28,7 @@ function updateTable() {
         </tr>
       `;
     });
-  
+
   // bind delete user
   $table.querySelector('tbody').innerHTML = $rows.join('');
   $table.querySelectorAll('tr > td > button').forEach(($btn, index) => {

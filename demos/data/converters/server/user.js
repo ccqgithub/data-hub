@@ -1,5 +1,5 @@
 import axios from 'axios';
-import Rx from 'rxjs';
+import Rx from 'rxjs/Rx';
 
 export let userDel = (userId) => {
   let promise = new Promise((resolve, reject) => {
