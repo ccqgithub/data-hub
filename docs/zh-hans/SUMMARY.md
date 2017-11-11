@@ -7,6 +7,7 @@
 - [开始](getting-started.md)
 - [流程图](overview.md)
 - [核心概念](core-concepts.md)
+- [目录结构](structure.md)
 
 ## API手册
 

@@ -4,4 +4,4 @@ cd _book
 git init
 git add -A
 git commit -m 'update book'
-git push -f git@github.com:ccqgithub/rx-hub master:gh-pages
+git push -f https://github.com/ccqgithub/rx-hub.git master:gh-pages
