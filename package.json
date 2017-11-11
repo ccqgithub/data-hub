@@ -1,6 +1,6 @@
 {
   "name": "rx-hub",
-  "version": "5.2.2",
+  "version": "5.2.3",
   "description": "> data hub",
   "main": "index.js",
   "peerDependencies": {

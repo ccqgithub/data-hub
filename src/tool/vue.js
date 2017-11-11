@@ -1,6 +1,6 @@
 const VuePlugin = {};
 
-VuePlugin.install = function(Vue, options) {
+VuePlugin.install = function(Vue, options={}) {
 
   let storeOptionKey = options.storeOptionKey || 'store';
   let storeKey = options.storeKey || '$store';
@@ -13,7 +13,7 @@ VuePlugin.install = function(Vue, options) {
   Vue.mixin({
     data() {
       const vm = this;
-      
+
       // injection data with state
       return {
         [stateKey]: vm[storeKey] ? vm[storeKey].state : null,
