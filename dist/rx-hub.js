@@ -362,6 +362,12 @@ VuePlugin.install = function (Vue, options) {
   Vue.mixin({
     data: function data() {
       var vm = this;
+
+      // injection data with state
+      return defineProperty({}, stateKey, vm[storeKey] ? vm[storeKey].state : null);
+    },
+    beforeCreate: function beforeCreate() {
+      var vm = this;
       var options = vm.$options;
       var store = options[storeOptionKey];
       var hub = options[hubOptionKey];
@@ -382,9 +388,6 @@ VuePlugin.install = function (Vue, options) {
 
       // subscriptions
       vm[subscriptionsKey] = {};
-
-      // injection data with state
-      return defineProperty({}, stateKey, vm[storeKey] ? vm[storeKey].state : null);
     },
 
 
