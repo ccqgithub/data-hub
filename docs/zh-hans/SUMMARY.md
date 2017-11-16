@@ -4,9 +4,10 @@
 
 - [安装](installation.md)
 - [rx-hub 是什么？](intro.md)
-- [开始](getting-started.md)
-- [流程图](overview.md)
 - [核心概念](core-concepts.md)
+- [数据流动图](overview.md)
+- [管道连接](concat.md)
+- [开始](getting-started.md)
 - [目录结构](structure.md)
 
 ## API手册
