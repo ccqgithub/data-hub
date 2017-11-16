@@ -1,6 +1,6 @@
 const VuePlugin = {};
 
-VuePlugin.install = function(Vue, options) {
+VuePlugin.install = function(Vue, options={}) {
 
   let storeOptionKey = options.storeOptionKey || 'store';
   let storeKey = options.storeKey || '$store';
@@ -12,6 +12,15 @@ VuePlugin.install = function(Vue, options) {
   // mixin
   Vue.mixin({
     data() {
+      const vm = this;
+
+      // injection data with state
+      return {
+        [stateKey]: vm[storeKey] ? vm[storeKey].state : null,
+      }
+    },
+
+    beforeCreate() {
       const vm = this;
       const options = vm.$options;
       const store = options[storeOptionKey];
@@ -33,11 +42,6 @@ VuePlugin.install = function(Vue, options) {
 
       // subscriptions
       vm[subscriptionsKey] = {};
-
-      // injection data with state
-      return {
-        [stateKey]: vm[storeKey] ? vm[storeKey].state : null,
-      }
     },
 
     methods: {

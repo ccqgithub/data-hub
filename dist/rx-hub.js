@@ -349,7 +349,9 @@ var Hub = function () {
 
 var VuePlugin = {};
 
-VuePlugin.install = function (Vue, options) {
+VuePlugin.install = function (Vue) {
+  var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
 
   var storeOptionKey = options.storeOptionKey || 'store';
   var storeKey = options.storeKey || '$store';
@@ -361,6 +363,12 @@ VuePlugin.install = function (Vue, options) {
   // mixin
   Vue.mixin({
     data: function data() {
+      var vm = this;
+
+      // injection data with state
+      return defineProperty({}, stateKey, vm[storeKey] ? vm[storeKey].state : null);
+    },
+    beforeCreate: function beforeCreate() {
       var vm = this;
       var options = vm.$options;
       var store = options[storeOptionKey];
@@ -382,9 +390,6 @@ VuePlugin.install = function (Vue, options) {
 
       // subscriptions
       vm[subscriptionsKey] = {};
-
-      // injection data with state
-      return defineProperty({}, stateKey, vm[storeKey] ? vm[storeKey].state : null);
     },
 
 
