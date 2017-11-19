@@ -77,8 +77,9 @@ VuePlugin.install = function(Vue, options={}) {
     beforeDestroy() {
       this.$unsubscribe();
     },
-    beforeRouteLeave() {
+    beforeRouteLeave(to, from, next) {
       this.$unsubscribe();
+      next();
     }
   });
 }
