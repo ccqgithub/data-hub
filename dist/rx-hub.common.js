@@ -422,10 +422,6 @@ VuePlugin.install = function (Vue) {
 
     beforeDestroy: function beforeDestroy() {
       this.$unsubscribe();
-    },
-    beforeRouteLeave: function beforeRouteLeave(to, from, next) {
-      this.$unsubscribe();
-      next();
     }
   });
 };
