@@ -6,19 +6,10 @@ VuePlugin.install = function(Vue, options={}) {
   let storeKey = options.storeKey || '$store';
   let hubOptionKey = options.hubOptionKey || 'hub';
   let hubKey = options.hubKey || '$hub';
-  let stateKey = options.stateKey || 'state';
   let subscriptionsKey = options.subscriptionsKey || '$subs';
 
   // mixin
   Vue.mixin({
-    data() {
-      const vm = this;
-
-      // injection data with state
-      return {
-        [stateKey]: vm[storeKey] ? vm[storeKey].state : null,
-      }
-    },
 
     beforeCreate() {
       const vm = this;

@@ -7,6 +7,7 @@ export default class Store {
   constructor(options={}) {
     this._check(options);
 
+    this.debug = !!options.debug;
     this.name = options.name || 'rx-hub store';
     this._isRxHubStore = true;
     this._subject = new Subject();
@@ -70,12 +71,32 @@ export default class Store {
   }
 
   /**
+   * clone a node in state, internal use: JSON.parse(JSON.stringify(node))
+   * let userList = store.copy('user.list');
+   */
+  copy(path) {
+    let arr = path.split('.');
+    let find = this.state;
+
+    while (typeof find === 'object' && arr.length) {
+      find = find[arr.shift()];
+    }
+
+    return JSON.parse(JSON.stringify(find));
+  }
+
+  /**
    * [commit description]
    * store.commit('main.user.add', {username: ''})
    */
   commit(mutation, payload, parent='') {
     let arr = mutation.split('.', 2);
     let location = parent ? parent + '.' + arr[0] : arr[0];
+
+    // log
+    if (this.debug && !parent) {
+      console.log(`rx-hub store commit ~ <${mutation}>`, payload);
+    }
 
     // module
     if (arr.length > 1) {
