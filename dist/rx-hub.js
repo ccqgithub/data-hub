@@ -188,7 +188,7 @@ var Store = function () {
   }, {
     key: 'copy',
     value: function copy(path) {
-      var arr = path.split('.');
+      var arr = path ? path.split('.') : [];
       var find = this.state;
 
       while ((typeof find === 'undefined' ? 'undefined' : _typeof(find)) === 'object' && arr.length) {

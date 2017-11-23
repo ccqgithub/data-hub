@@ -75,7 +75,7 @@ export default class Store {
    * let userList = store.copy('user.list');
    */
   copy(path) {
-    let arr = path.split('.');
+    let arr = path ? path.split('.') : [];
     let find = this.state;
 
     while (typeof find === 'object' && arr.length) {
