@@ -6,6 +6,7 @@ VuePlugin.install = function(Vue, options={}) {
   let storeKey = options.storeKey || '$store';
   let hubOptionKey = options.hubOptionKey || 'hub';
   let hubKey = options.hubKey || '$hub';
+  let stateKey = options.stateKey || '$state';
   let subscriptionsKey = options.subscriptionsKey || '$subs';
 
   // mixin
@@ -20,8 +21,10 @@ VuePlugin.install = function(Vue, options={}) {
       // store injection
       if (store) {
         vm[storeKey] = typeof store === 'function' ? store() : store;
+        vm[stateKey] = ( new Vue({ data: vm[storeKey].state }) ).$data;
       } else if (options.parent && options.parent[storeKey]) {
         vm[storeKey] = options.parent[storeKey];
+        vm[stateKey] = options.parent[stateKey];
       }
 
       // hub injection
