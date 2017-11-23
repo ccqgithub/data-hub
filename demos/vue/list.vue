@@ -27,7 +27,7 @@ export default {
   props: ['filter'],
   computed: {
     filterUsers() {
-      let users = this.state.user.list;
+      let users = this.$store.state.user.list;
       return users.filter(user => {
         return user.name.indexOf(this.filter.trim()) != -1;
       });

@@ -75,20 +75,7 @@ var createClass = function () {
 
 
 
-var defineProperty = function (obj, key, value) {
-  if (key in obj) {
-    Object.defineProperty(obj, key, {
-      value: value,
-      enumerable: true,
-      configurable: true,
-      writable: true
-    });
-  } else {
-    obj[key] = value;
-  }
 
-  return obj;
-};
 
 
 
@@ -135,6 +122,7 @@ var Store = function () {
 
     this._check(options);
 
+    this.debug = !!options.debug;
     this.name = options.name || 'rx-hub store';
     this._isRxHubStore = true;
     this._subject = new rxjs_Rx.Subject();
@@ -193,6 +181,24 @@ var Store = function () {
     }
 
     /**
+     * clone a node in state, internal use: JSON.parse(JSON.stringify(node))
+     * let userList = store.copy('user.list');
+     */
+
+  }, {
+    key: 'copy',
+    value: function copy(path) {
+      var arr = path.split('.');
+      var find = this.state;
+
+      while ((typeof find === 'undefined' ? 'undefined' : _typeof(find)) === 'object' && arr.length) {
+        find = find[arr.shift()];
+      }
+
+      return JSON.parse(JSON.stringify(find));
+    }
+
+    /**
      * [commit description]
      * store.commit('main.user.add', {username: ''})
      */
@@ -204,6 +210,11 @@ var Store = function () {
 
       var arr = mutation.split('.', 2);
       var location = parent ? parent + '.' + arr[0] : arr[0];
+
+      // log
+      if (this.debug && !parent) {
+        console.log('rx-hub store commit ~ <' + mutation + '>', payload);
+      }
 
       // module
       if (arr.length > 1) {
@@ -357,17 +368,10 @@ VuePlugin.install = function (Vue) {
   var storeKey = options.storeKey || '$store';
   var hubOptionKey = options.hubOptionKey || 'hub';
   var hubKey = options.hubKey || '$hub';
-  var stateKey = options.stateKey || 'state';
   var subscriptionsKey = options.subscriptionsKey || '$subs';
 
   // mixin
   Vue.mixin({
-    data: function data() {
-      var vm = this;
-
-      // injection data with state
-      return defineProperty({}, stateKey, vm[storeKey] ? vm[storeKey].state : null);
-    },
     beforeCreate: function beforeCreate() {
       var vm = this;
       var options = vm.$options;
