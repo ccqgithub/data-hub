@@ -11,7 +11,6 @@ Vue.use(VuePlugin, {
   storeKey: '$store',
   hubOptionKey: 'hub',
   hubKey: '$hub',
-  stateKey: 'state',
   subscriptionsKey: '$subs'
 });
 ```
@@ -22,7 +21,6 @@ Vue.use(VuePlugin, {
 
 - `vm.$store`: Store实例。
 - `vm.$hub`: 数据板实例
-- `vm.state`: 每个组件会在data中绑定一个state属性，引用为 Store 的状态`store.state`。
 - `vm.$subs`: 用来绑定订阅，组件内新建订阅的时候最好绑定在这上面，组件离开时会取消这些订阅（例：`vm.$subs.addUser = Observable.of(1).subscribe(item => {})`）。
 - `vm.$unsubscribe(key)`: 取消一个绑定在`vm.$subs`上的订阅，不传key则取消所有订阅。
 
@@ -36,7 +34,7 @@ new Vue({
   //
   computed: {
     user() {
-      return this.state.user;
+      return this.$sotre.state.user;
     }
   }
 })
@@ -44,17 +42,17 @@ new Vue({
 
 ## 使用
 
-> 获取数据: 一般直接从`vm.state`获取，或者通过计算属性获取。
+> 获取数据: 一般直接从`vm.$store.state`获取，或者通过计算属性获取。
 
 ```js
 export default {
   computed: {
     user() {
-      return this.state.user;
+      return this.$store.state.user;
     }
   },
   mounted() {
-    console.log(this.state.user)
+    console.log(this.$store.state.user)
   }
 };
 ```
@@ -98,4 +96,16 @@ export default {
     }
   }
 };
+```
+
+> 不能直接更改state，如果要把store的一些值初始化为data，可以用`store.copy`。
+
+```js
+data () {
+  const store = this.$store;
+
+  return {
+    user: store.copy(store)
+  }
+}
 ```

@@ -8,9 +8,9 @@
 
 > `Store`：Store 类似现实世界中的 水池、湖泊、海……
 
-> `单项数据流`：store中的数据是变换是单向的，通过mutation流入，通过get state流出。
+> `单向数据流`：store中的数据是变换是单向的，通过mutation流入，通过get state流出。
 
-> 并不是所有的数据都必须存进store，一些临时的数据变换就没必要。
+> 并不是所有的数据都必须存进公共store，一些`临时`或者`私有`的数据变换就没必要。
 
 - `mutation`: 数据变换，store 中的每一次`数据变换`都应该事先通过一个个`mutation`定义好，改动store的数据只能通过`mutation`操作。
 - `commit`: 提交一个mutation动作。

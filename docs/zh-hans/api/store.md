@@ -6,6 +6,9 @@
   import {Store} from 'rx-hub';
 
   let store = new Store({ // options:
+    // 开启调试模式后，每一次commit都会打印出来
+    debug: process.env.NODE_ENV !== 'production',
+
     // store 的名字，主要是方便调试
     name: 'storeName',
 
@@ -51,6 +54,12 @@
   ```
 
 - `store.getState()`: 获取store的状态。
+
+- `store.copy(nodePath)`: 克隆`state`的一个节点。
+
+  ```js
+  let userList = store.copy('user.list');
+  ```
 
 - `observable.subscribe(store)`: sotre 也可以作为观察者来进行变更数据, 数据流传入的数据格式必须是{payload, mutation}。
 

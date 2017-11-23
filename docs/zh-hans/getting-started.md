@@ -11,6 +11,7 @@
 import {Store} from 'rx-hub';
 
 export default new Store({
+  debug: process.env.NODE_ENV !== 'production',
   initialState: {
     list: []
   },
