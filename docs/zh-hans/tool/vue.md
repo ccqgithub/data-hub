@@ -11,6 +11,7 @@ Vue.use(VuePlugin, {
   storeKey: '$store',
   hubOptionKey: 'hub',
   hubKey: '$hub',
+  stateKey: '$state',
   subscriptionsKey: '$subs'
 });
 ```
@@ -21,6 +22,7 @@ Vue.use(VuePlugin, {
 
 - `vm.$store`: Store实例。
 - `vm.$hub`: 数据板实例
+- `vm.$state`: 响应式的state，关联到`store.state`.
 - `vm.$subs`: 用来绑定订阅，组件内新建订阅的时候最好绑定在这上面，组件离开时会取消这些订阅（例：`vm.$subs.addUser = Observable.of(1).subscribe(item => {})`）。
 - `vm.$unsubscribe(key)`: 取消一个绑定在`vm.$subs`上的订阅，不传key则取消所有订阅。
 
