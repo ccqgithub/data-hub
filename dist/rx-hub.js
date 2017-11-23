@@ -134,20 +134,20 @@ var Store = function () {
   createClass(Store, [{
     key: '_check',
     value: function _check(options) {
-      invariant((typeof options === 'undefined' ? 'undefined' : _typeof(options)) === 'object', 'rx-hub sotre ~ options is not an object!');
+      invariant((typeof options === 'undefined' ? 'undefined' : _typeof(options)) === 'object', 'rx-hub error ~ store: options is not an object!');
 
       var initialState = options.initialState || {};
-      invariant(initialState && (typeof initialState === 'undefined' ? 'undefined' : _typeof(initialState)) === 'object', 'rx-hub store ~ options.initialState is not an object!');
+      invariant(initialState && (typeof initialState === 'undefined' ? 'undefined' : _typeof(initialState)) === 'object', 'rx-hub error ~ store: options.initialState is not an object!');
 
       var mutations = options.mutations || {};
-      invariant(mutations && (typeof mutations === 'undefined' ? 'undefined' : _typeof(mutations)) === 'object', 'rx-hub store ~ options.mutations is not an object!');
+      invariant(mutations && (typeof mutations === 'undefined' ? 'undefined' : _typeof(mutations)) === 'object', 'rx-hub error ~ store: options.mutations is not an object!');
 
       var modules = options.modules || {};
-      invariant(modules && (typeof modules === 'undefined' ? 'undefined' : _typeof(modules)) === 'object', 'rx-hub store ~ options.modules is not an object!');
+      invariant(modules && (typeof modules === 'undefined' ? 'undefined' : _typeof(modules)) === 'object', 'rx-hub error ~ store: options.modules is not an object!');
 
       Object.keys(modules).forEach(function (key) {
         var module = modules[key];
-        invariant((typeof module === 'undefined' ? 'undefined' : _typeof(module)) === 'object' && module._isRxHubStore, 'rx-hub store ~ module must be a store instance!');
+        invariant((typeof module === 'undefined' ? 'undefined' : _typeof(module)) === 'object' && module._isRxHubStore, 'rx-hub error ~ store: module must be a store instance!');
       });
     }
 
@@ -213,7 +213,7 @@ var Store = function () {
 
       // log
       if (this.debug && !parent) {
-        console.log('rx-hub store commit ~ <' + mutation + '>', payload);
+        console.log('rx-hub log ~ store commit <' + mutation + '>', payload);
       }
 
       // module
@@ -221,7 +221,7 @@ var Store = function () {
         var moduleName = arr[0];
         var module = this._modules[moduleName];
 
-        invariant(module, 'rx-hub store ~ module <' + location + '> is not defined!');
+        invariant(module, 'rx-hub error ~ store: module <' + location + '> is not defined!');
 
         module.commit(arr[1], payload, location);
 
@@ -232,7 +232,7 @@ var Store = function () {
       }
 
       // mutation
-      invariant(this._mutations[mutation], 'rx-hub store ~ mutation <' + location + '> is not defined!');
+      invariant(this._mutations[mutation], 'rx-hub error ~ store: mutation <' + location + '> is not defined!');
 
       var mutationFunc = this._mutations[mutation].bind(this);
       mutationFunc(payload, this._state, this);
@@ -295,7 +295,7 @@ var Hub = function () {
   createClass(Hub, [{
     key: 'pipe',
     value: function pipe(name) {
-      invariant(typeof this._pipes[name] === 'function', 'rx-hub hub ~ pipe <' + name + '> is undefined or not function!');
+      invariant(typeof this._pipes[name] === 'function', 'rx-hub error ~ pipe <' + name + '> is undefined or not function!');
       return this._pipes[name];
     }
 

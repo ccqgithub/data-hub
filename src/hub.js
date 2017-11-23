@@ -21,7 +21,7 @@ export default class Hub {
   pipe(name) {
     invariant(
       typeof this._pipes[name] === 'function',
-      `rx-hub hub ~ pipe <${name}> is undefined or not function!`
+      `rx-hub error ~ pipe <${name}> is undefined or not function!`
     );
     return this._pipes[name];
   }
