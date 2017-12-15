@@ -1,4 +1,4 @@
-import {Store} from 'rx-hub';
+import {Store} from 'data-hub';
 
 export default new Store({
   initialState: {

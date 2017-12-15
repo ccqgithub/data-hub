@@ -1,4 +1,4 @@
-import {Store} from 'rx-hub';
+import {Store} from 'data-hub';
 import user from './modules/user';
 
 export default new Store({

@@ -13,7 +13,7 @@ export default function logMiddleware({payload, pipeName, type}) {
     //
   }
 
-  console.log(`rx-hub log ~ pipe ${typeMsg} <${pipeName}>:`, data);
+  console.log(`data-hub log ~ pipe ${typeMsg} <${pipeName}>:`, data);
 
   return Observable.of(payload);
 }

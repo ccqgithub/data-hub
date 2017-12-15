@@ -2,13 +2,11 @@
 
 ## 定义数据存储：`Store`。
 
-> 一个应用可以有很多 Store 来存储数据，但为了管理方便，一般一个应用使用同一个核心的`Store`, 。
-
 这是一个用户增删的简单应用的Store。
 
 ```js
 // data/stores/main.js
-import {Store} from 'rx-hub';
+import {Store} from 'data-hub';
 
 export default new Store({
   debug: process.env.NODE_ENV !== 'production',
@@ -45,8 +43,6 @@ export default new Store({
 ```
 
 ## 定义`转换器`
-
-> `转换器`：每一次数据变换是一次数据流动，经过一个长长的管道，转换器是这个管道中的一个节点，这个节点流入一个旧的数据流，经过变换后流出一个新的数据流。
 
 每一个`转换器`是一个函数，传入一个数据对象`payload`, 传出一个可观察的数据流（Observable：RxJS数据流）。
 
@@ -100,12 +96,8 @@ export let commit = ({mutation, payload}) => {
 
 ## 定义一个`数据板`（Hub）
 
-> 一条数据流就是一条管道，这个管道分为很多段，每一段水管中间是一个`转换器`，数据从水管头流入，经过转换器的变换，从水管尾流出。
-
-> 数据板就是将这些一段段的`管道`集中监控管理起来，监控其中的数据流动。
-
 ```js
-import {Hub, logMiddleware} from 'rx-hub';
+import {Hub, logMiddleware} from 'data-hub';
 import Rx from 'rxjs/Rx';
 import mainStore from '../stores/main';
 import * as userConverters from '../converters/user';
@@ -135,7 +127,7 @@ export default hub;
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>rx-hub with simple javascript</title>
+  <title>data-hub with simple javascript</title>
   <!-- html-webpack-plugin-css -->
 </head>
 <body>

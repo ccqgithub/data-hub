@@ -3,7 +3,7 @@
 - `new Store(options)`: 实例化一个Store。
 
   ```js
-  import {Store} from 'rx-hub';
+  import {Store} from 'data-hub';
 
   let store = new Store({ // options:
     // 开启调试模式后，每一次commit都会打印出来

@@ -23,9 +23,9 @@ let config = {
   entry: 'index.js',
   plugins: plugins,
   external: external,
-  dest: 'dist/rx-hub.js',
+  dest: 'dist/data-hub.js',
   format: 'umd',
-  moduleName: 'rx-hub',
+  moduleName: 'DataHub',
   sourceMap: true,
   globals: {
     'rxjs/Rx': 'Rx'
@@ -33,16 +33,16 @@ let config = {
 }
 
 if (TARGET == 'cjs') {
-  config.dest = 'dist/rx-hub.common.js';
+  config.dest = 'dist/data-hub.common.js';
   config.format = 'cjs';
 } else if (TARGET == 'umd') {
-  config.dest = 'dist/rx-hub.js';
+  config.dest = 'dist/data-hub.js';
   config.format = 'umd';
   config.plugins.push(replace({
     'process.env.NODE_ENV': JSON.stringify('development')
   }));
 } else if (TARGET == 'umd-prod') {
-  config.dest = 'dist/rx-hub.min.js';
+  config.dest = 'dist/data-hub.min.js';
   config.format = 'umd';
   config.plugins.push(replace({
     'process.env.NODE_ENV': JSON.stringify('production')

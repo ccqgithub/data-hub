@@ -1,9 +1,9 @@
 # 数据板：Hub
 
-- `new Hub(options)`: 创建实`Hub`例.
+- `let hub = new Hub(options)`: 创建实`Hub`例.
 
 ```js
-import {Hub} from 'rx-hub';
+import {Hub} from 'data-hub';
 
 const hub = new Hub({
   // 管道进入前的中间件
@@ -12,6 +12,9 @@ const hub = new Hub({
   afterMiddlewares: [logMiddleware],
 });
 ```
+
+- `hub.Observable`: Rx.ObObservable.
+- `hub.Subject`: Rx.Subject.
 
 - `hub.addPipe(name, converter)`: 添加一个管道。
 
@@ -48,7 +51,7 @@ const hub = new Hub({
   - `middleware`: 中间件，特殊的`Converter`。
 
   ```js
-  import {logMiddleware} from 'rx-hub';
+  import {logMiddleware} from 'data-hub';
 
   hub.addMiddleware('before', logMiddleware);
   ```

@@ -8,7 +8,7 @@ export default class Store {
     this._check(options);
 
     this.debug = !!options.debug;
-    this.name = options.name || 'rx-hub store';
+    this.name = options.name || 'data-hub store';
     this._isRxHubStore = true;
     this._subject = new Subject();
     this._state = options.initialState || {};
@@ -19,32 +19,32 @@ export default class Store {
   _check(options) {
     invariant(
       typeof options === 'object',
-      `rx-hub error ~ store: options is not an object!`
+      `data-hub error ~ store: options is not an object!`
     );
 
     let initialState = options.initialState || {};
     invariant(
       initialState && typeof initialState === 'object',
-      `rx-hub error ~ store: options.initialState is not an object!`
+      `data-hub error ~ store: options.initialState is not an object!`
     );
 
     let mutations = options.mutations || {};
     invariant(
       mutations && typeof mutations === 'object',
-      `rx-hub error ~ store: options.mutations is not an object!`
+      `data-hub error ~ store: options.mutations is not an object!`
     )
 
     let modules = options.modules || {};
     invariant(
       modules && typeof modules === 'object',
-      `rx-hub error ~ store: options.modules is not an object!`
+      `data-hub error ~ store: options.modules is not an object!`
     );
 
     Object.keys(modules).forEach(key => {
       let module = modules[key];
       invariant(
         typeof module === 'object' && module._isRxHubStore,
-        `rx-hub error ~ store: module must be a store instance!`
+        `data-hub error ~ store: module must be a store instance!`
       );
     });
   }
@@ -95,7 +95,7 @@ export default class Store {
 
     // log
     if (this.debug && !parent) {
-      console.log(`rx-hub log ~ store commit <${mutation}>`, payload);
+      console.log(`data-hub log ~ store commit <${mutation}>`, payload);
     }
 
     // module
@@ -105,7 +105,7 @@ export default class Store {
 
       invariant(
         module,
-        `rx-hub error ~ store: module <${location}> is not defined!`
+        `data-hub error ~ store: module <${location}> is not defined!`
       );
 
       module.commit(arr[1], payload, location);
@@ -119,7 +119,7 @@ export default class Store {
     // mutation
     invariant(
       this._mutations[mutation],
-      `rx-hub error ~ store: mutation <${location}> is not defined!`
+      `data-hub error ~ store: mutation <${location}> is not defined!`
     )
 
     let mutationFunc = this._mutations[mutation].bind(this);

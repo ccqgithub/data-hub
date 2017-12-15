@@ -1,4 +1,4 @@
-import {Hub, logMiddleware} from 'rx-hub';
+import {Hub, logMiddleware} from 'data-hub';
 import Rx from 'rxjs/Rx';
 import mainStore from '../stores/main';
 import * as userServerConverters from '../converters/server/user';

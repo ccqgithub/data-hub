@@ -4,7 +4,7 @@
 
 ```js
 import Vue from 'vue';
-import {VuePlugin} from 'rx-hub';
+import {VuePlugin} from 'data-hub';
 
 Vue.use(VuePlugin, {
   storeOptionKey: 'store',

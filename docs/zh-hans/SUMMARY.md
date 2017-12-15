@@ -1,9 +1,9 @@
-# rx-hub
+# data-hub
 
 ## 基本使用
 
 - [安装](installation.md)
-- [rx-hub 是什么？](intro.md)
+- [data-hub 是什么？](intro.md)
 - [核心概念](core-concepts.md)
 - [数据流动图](overview.md)
 - [管道连接](concat.md)

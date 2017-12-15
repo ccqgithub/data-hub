@@ -1,4 +1,4 @@
-import {Observable} from './rxjs';
+import {Observable, Subject} from './rxjs';
 import invariant from './util/invariant';
 
 export default class Hub {
@@ -7,6 +7,11 @@ export default class Hub {
     let beforeMiddlewares = options.beforeMiddlewares || [];
     let afterMiddlewares = options.afterMiddlewares || [];
 
+    // Rx Refrence
+    this.Observable = Observable;
+    this.Subject = Subject;
+
+    // store pipes, middlewares
     this._pipes = {};
     this._middlewares = {
       before: beforeMiddlewares,
@@ -21,7 +26,7 @@ export default class Hub {
   pipe(name) {
     invariant(
       typeof this._pipes[name] === 'function',
-      `rx-hub error ~ pipe <${name}> is undefined or not function!`
+      `data-hub error ~ pipe <${name}> is undefined or not function!`
     );
     return this._pipes[name];
   }
