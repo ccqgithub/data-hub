@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Rx from 'rxjs/Rx';
-import {VuePlugin} from 'rx-hub';
+import {VuePlugin} from 'data-hub';
 import Index from '../vue/index';
 import "../style/style.less";
 
