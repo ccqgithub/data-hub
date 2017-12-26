@@ -15,8 +15,11 @@
 定义一个 store
 
 ```js
-import {Store} from 'data-hub';
+import {Store, useRx} from 'data-hub';
+import Rx from 'rxjs';
 import user from './modules/user';
+
+useRx(Rx);
 
 export default new Store({
   // 初始状态
@@ -126,10 +129,12 @@ Observable.of({})
 - 每一个管道流出前的变换（中间件）
 
 ```js
-import {Hub, logMiddleware} from 'data-hub';
+import {Hub, logMiddleware, useRx} from 'data-hub';
 import Rx from 'rxjs/Rx';
 import * as userConverters from '../converters/user';
 import * as storeConverters from '../converters/store';
+
+useRx(Rx);
 
 // 初始化一个数据板实例，并给所有管道绑定中间件
 const hub = new Hub({

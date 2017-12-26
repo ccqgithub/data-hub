@@ -4,9 +4,9 @@ data-hub 的一个操作产生一个`临时数据流`，数据流的中间可能
 
 所以，管道的连接一般使用如下的RxJS数据流的连接[操作：operators](http://reactivex.io/rxjs/manual/overview.html#operators):
 
-- `concatMap`: 旧的数据流中的每一数据发射，映射为一个新的数据流
-- `exhaustMap`：旧的数据流中的每一数据发射，映射为一个新的数据流（一个时刻只能有一个流，旧的优先)
-- `switchMap`：旧的数据流中的每一数据发射，映射为一个新的数据流（一个时刻只能有一个流，新的优先)。
+- `concatMap`: 旧的数据流中的每一数据发射，映射为一个新的数据流，并且大平（新的等待旧的结束）
+- `exhaustMap`：旧的数据流中的每一数据发射，映射为一个新的数据流（一个时刻只能有一个流，如果旧的流还未完成，新的将被忽略)
+- `switchMap`：旧的数据流中的每一数据发射，映射为一个新的数据流（一个时刻只能有一个流，新的来临时drop旧的)。
 
 ```js
 Observable.fromEvent($btn, 'click')
@@ -20,7 +20,7 @@ Observable.fromEvent($btn, 'click')
 
     return id;
   })
-  // 连接管道，后的点击覆盖之前的点击
+  // 连接管道，新的服务器请求到来，如果旧的请求未返回，则忽略旧的
   .switchMap(hub.pipe('server.user.userDel'))
   .map(id => {
     return {

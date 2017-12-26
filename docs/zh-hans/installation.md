@@ -22,8 +22,31 @@ npm i data-hub@latest -S
 > es6 版
 
 ```js
-import {Sotre, Hub, logMiddleware, VuePlugin, createRxHubComponent} from 'data-hub';
+import {Sotre, Hub, logMiddleware, VuePlugin, createRxHubComponent, useRx} from 'data-hub';
 ```
+
+## 绑定Rx
+
+```js
+import {useRx, Hub} from 'data-hub';
+import Rx from 'rxjs';
+
+useRx(Rx);
+
+//let hub = new Hub
+```
+
+或者：
+
+```js
+import {useRx, Hub} from 'data-hub';
+import {Observable, Subject} from 'rxjs/Rx';
+
+useRx(Rx);
+
+//let hub = new Hub
+```
+
 
 > es6 各部分单独使用
 
@@ -49,8 +72,9 @@ import {
   Sotre,
   Hub,
   logMiddleware,
+  useRx,
   VuePlugin,
-  createRxHubComponent
+  createRxHubComponent,
 } from 'data-hub/dist/data-hub.common';
 ```
 

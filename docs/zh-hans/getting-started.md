@@ -6,7 +6,10 @@
 
 ```js
 // data/stores/main.js
-import {Store} from 'data-hub';
+import Rx from 'rxjs';
+import {Store, useRx} from 'data-hub';
+
+useRx(Rx);
 
 export default new Store({
   debug: process.env.NODE_ENV !== 'production',
@@ -97,11 +100,13 @@ export let commit = ({mutation, payload}) => {
 ## 定义一个`数据板`（Hub）
 
 ```js
-import {Hub, logMiddleware} from 'data-hub';
+import {Hub, logMiddleware, useRx} from 'data-hub';
 import Rx from 'rxjs/Rx';
 import mainStore from '../stores/main';
 import * as userConverters from '../converters/user';
 import * as storeConverters from '../converters/store';
+
+useRx(Rx);
 
 // 初始化一个数据板实例
 const hub = new Hub({
