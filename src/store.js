@@ -1,16 +1,18 @@
-import {Subject} from './rxjs';
+import {Rx, checkRx} from './rxjs';
 import invariant from './util/invariant';
 
 export default class Store {
 
   // constructor
   constructor(options={}) {
+    checkRx();
+
     this._check(options);
 
     this.debug = !!options.debug;
     this.name = options.name || 'data-hub store';
     this._isRxHubStore = true;
-    this._subject = new Subject();
+    this._subject = new Rx.Subject();
     this._state = options.initialState || {};
     this._mutations = options.mutations || {};
     this._modules = options.modules || {};

@@ -1,4 +1,7 @@
-import {Store} from 'data-hub';
+import {Store, useRx} from 'data-hub';
+import Rx from 'rxjs';
+
+useRx(Rx);
 
 export default new Store({
   initialState: {

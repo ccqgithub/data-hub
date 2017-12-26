@@ -1,6 +1,9 @@
+import {Rx, checkRx} from '../rxjs';
 const VuePlugin = {};
 
 VuePlugin.install = function(Vue, options={}) {
+  // check rx install
+  checkRx();
 
   let storeOptionKey = options.storeOptionKey || 'store';
   let storeKey = options.storeKey || '$store';
@@ -8,6 +11,34 @@ VuePlugin.install = function(Vue, options={}) {
   let hubKey = options.hubKey || '$hub';
   let stateKey = options.stateKey || '$state';
   let subscriptionsKey = options.subscriptionsKey || '$subs';
+
+  Vue.prototype.$unsubscribe = function(ns) {
+    const vm = this;
+    const subs = vm[subscriptionsKey];
+
+    try {
+      // unsubscribe one
+      if (ns) {
+        let sub = subs[ns]; 
+        if (sub && typeof sub.unsubscribe === 'function') {
+          sub.unsubscribe();
+        }
+        delete subs[ns];
+        return;
+      }
+
+      // unsubscribe all
+      Object.keys(subs).forEach(key => {
+        let sub = subs[key];
+        if (sub && typeof sub.unsubscribe === 'function') {
+          sub.unsubscribe();
+        }
+        delete subs[key];
+      });
+    } catch(e) {
+      console.log(e);
+    }
+  }
 
   // mixin
   Vue.mixin({
@@ -17,6 +48,9 @@ VuePlugin.install = function(Vue, options={}) {
       const options = vm.$options;
       const store = options[storeOptionKey];
       const hub = options[hubOptionKey];
+
+      // subscriptions
+      vm[subscriptionsKey] = {};
 
       // store injection
       if (store) {
@@ -34,38 +68,11 @@ VuePlugin.install = function(Vue, options={}) {
         vm[hubKey] = options.parent[hubKey];
       }
 
-      // subscriptions
-      vm[subscriptionsKey] = {};
-    },
-
-    methods: {
-      $unsubscribe(key) {
-        const vm = this;
-        const subscriptions = vm[subscriptionsKey];
-
-        try {
-          // unsubscribe one
-          if (key) {
-            if (
-              subscriptions[key]
-              && typeof subscriptions[key].unsubscribe === 'function'
-            ) {
-              subscriptions[key].unsubscribe();
-            }
-            return;
-          }
-
-          // unsubscribe all
-          Object.keys(subscriptions).forEach(key => {
-            let subscription = subscriptions[key];
-            if (subscription && typeof subscription.unsubscribe === 'function') {
-              subscription.unsubscribe();
-            }
-          });
-        } catch(e) {
-          console.log(e);
-        }
-      }
+      // subjects
+      let subjects = options['subjects'] || [];
+      subjects.forEach(sName => {
+        vm[sName] = new Rx.Subject();
+      });
     },
 
     beforeDestroy() {

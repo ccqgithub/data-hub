@@ -2,8 +2,6 @@
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
-var rxjs_Rx = require('rxjs/Rx');
-
 var NODE_ENV = process.env.NODE_ENV;
 
 var invariant = function (condition, format, a, b, c, d, e, f) {
@@ -30,6 +28,22 @@ var invariant = function (condition, format, a, b, c, d, e, f) {
     throw error;
   }
 };
+
+var Rx = {
+  _needInstall: true
+};
+
+function useRx() {
+  var _Rx = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+  Rx = _Rx;
+}
+
+function checkRx() {
+  invariant(!Rx._needInstall && Rx.Observable && Rx.Subject, 'data-hub error ~ useRx({Observerble, Subject}) is required!');
+
+  invariant(Rx.Observable.of, 'data-hub error ~ Rx.Observable.of is required! Try import \'import \'rxjs/add/observable/of\'.');
+}
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
   return typeof obj;
@@ -120,12 +134,14 @@ var Store = function () {
     var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
     classCallCheck(this, Store);
 
+    checkRx();
+
     this._check(options);
 
     this.debug = !!options.debug;
     this.name = options.name || 'data-hub store';
     this._isRxHubStore = true;
-    this._subject = new rxjs_Rx.Subject();
+    this._subject = new Rx.Subject();
     this._state = options.initialState || {};
     this._mutations = options.mutations || {};
     this._modules = options.modules || {};
@@ -276,12 +292,14 @@ var Hub = function () {
     var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
     classCallCheck(this, Hub);
 
+    // check rx install
+    checkRx();
+
     var beforeMiddlewares = options.beforeMiddlewares || [];
     var afterMiddlewares = options.afterMiddlewares || [];
 
     // Rx Refrence
-    this.Observable = rxjs_Rx.Observable;
-    this.Subject = rxjs_Rx.Subject;
+    this.Rx = Rx;
 
     // store pipes, middlewares
     this._pipes = {};
@@ -312,7 +330,7 @@ var Hub = function () {
       var _this = this;
 
       this._pipes[name] = function (payload) {
-        return rxjs_Rx.Observable.of(payload).concatMap(_this.combinedMiddleware('before', name)).concatMap(converter).concatMap(_this.combinedMiddleware('after', name));
+        return Rx.Observable.of(payload).concatMap(_this.combinedMiddleware('before', name)).concatMap(converter).concatMap(_this.combinedMiddleware('after', name));
       };
     }
 
@@ -338,7 +356,7 @@ var Hub = function () {
       var _this3 = this;
 
       return function (payload) {
-        var observable = rxjs_Rx.Observable.of(payload);
+        var observable = Rx.Observable.of(payload);
         _this3._middlewares[type].forEach(function (fn) {
           observable = observable.map(function (payload) {
             return {
@@ -368,6 +386,8 @@ var VuePlugin = {};
 VuePlugin.install = function (Vue) {
   var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
+  // check rx install
+  checkRx();
 
   var storeOptionKey = options.storeOptionKey || 'store';
   var storeKey = options.storeKey || '$store';
@@ -376,6 +396,34 @@ VuePlugin.install = function (Vue) {
   var stateKey = options.stateKey || '$state';
   var subscriptionsKey = options.subscriptionsKey || '$subs';
 
+  Vue.prototype.$unsubscribe = function (ns) {
+    var vm = this;
+    var subs = vm[subscriptionsKey];
+
+    try {
+      // unsubscribe one
+      if (ns) {
+        var sub = subs[ns];
+        if (sub && typeof sub.unsubscribe === 'function') {
+          sub.unsubscribe();
+        }
+        delete subs[ns];
+        return;
+      }
+
+      // unsubscribe all
+      Object.keys(subs).forEach(function (key) {
+        var sub = subs[key];
+        if (sub && typeof sub.unsubscribe === 'function') {
+          sub.unsubscribe();
+        }
+        delete subs[key];
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   // mixin
   Vue.mixin({
     beforeCreate: function beforeCreate() {
@@ -383,6 +431,9 @@ VuePlugin.install = function (Vue) {
       var options = vm.$options;
       var store = options[storeOptionKey];
       var hub = options[hubOptionKey];
+
+      // subscriptions
+      vm[subscriptionsKey] = {};
 
       // store injection
       if (store) {
@@ -400,38 +451,12 @@ VuePlugin.install = function (Vue) {
         vm[hubKey] = options.parent[hubKey];
       }
 
-      // subscriptions
-      vm[subscriptionsKey] = {};
+      // subjects
+      var subjects = options['subjects'] || [];
+      subjects.forEach(function (sName) {
+        vm[sName] = new Rx.Subject();
+      });
     },
-
-
-    methods: {
-      $unsubscribe: function $unsubscribe(key) {
-        var vm = this;
-        var subscriptions = vm[subscriptionsKey];
-
-        try {
-          // unsubscribe one
-          if (key) {
-            if (subscriptions[key] && typeof subscriptions[key].unsubscribe === 'function') {
-              subscriptions[key].unsubscribe();
-            }
-            return;
-          }
-
-          // unsubscribe all
-          Object.keys(subscriptions).forEach(function (key) {
-            var subscription = subscriptions[key];
-            if (subscription && typeof subscription.unsubscribe === 'function') {
-              subscription.unsubscribe();
-            }
-          });
-        } catch (e) {
-          console.log(e);
-        }
-      }
-    },
-
     beforeDestroy: function beforeDestroy() {
       this.$unsubscribe();
     }
@@ -457,7 +482,7 @@ function logMiddleware(_ref) {
 
   console.log('data-hub log ~ pipe ' + typeMsg + ' <' + pipeName + '>:', data);
 
-  return rxjs_Rx.Observable.of(payload);
+  return Rx.Observable.of(payload);
 }
 
 function createRxHubComponent(_ref, React) {
@@ -468,9 +493,7 @@ function createRxHubComponent(_ref, React) {
       _ref$hubKey = _ref.hubKey,
       hubKey = _ref$hubKey === undefined ? '$hub' : _ref$hubKey,
       _ref$subscriptionsKey = _ref.subscriptionsKey,
-      subscriptionsKey = _ref$subscriptionsKey === undefined ? '$subs' : _ref$subscriptionsKey,
-      _ref$unsubscribeKey = _ref.unsubscribeKey,
-      unsubscribeKey = _ref$unsubscribeKey === undefined ? '$unsubscribe' : _ref$unsubscribeKey;
+      subscriptionsKey = _ref$subscriptionsKey === undefined ? '$subs' : _ref$subscriptionsKey;
 
   var RxHubComponent = function (_React$Component) {
     inherits(RxHubComponent, _React$Component);
@@ -478,43 +501,50 @@ function createRxHubComponent(_ref, React) {
     function RxHubComponent(props) {
       classCallCheck(this, RxHubComponent);
 
+      // check rx install
       var _this = possibleConstructorReturn(this, (RxHubComponent.__proto__ || Object.getPrototypeOf(RxHubComponent)).call(this, props));
+
+      checkRx();
 
       _this[storeKey] = store;
       _this[hubKey] = hub;
       _this[subscriptionsKey] = {};
-
-      // unsubscribe
-      _this[unsubscribeKey] = function (key) {
-        var subscriptions = _this[subscriptionsKey];
-
-        try {
-          // remove one
-          if (key) {
-            if (subscriptions[key] && typeof subscriptions[key].unsubscribe === 'function') {
-              subscriptions[key].unsubscribe();
-            }
-            return;
-          }
-
-          // remove all
-          Object.keys(subscriptions).forEach(function (key) {
-            var subscription = subscriptions[key];
-            if (typeof subscription.unsubscribe === 'function') {
-              subscription.unsubscribe();
-            }
-          });
-        } catch (e) {
-          console.error(e);
-        }
-      };
       return _this;
     }
 
     createClass(RxHubComponent, [{
+      key: '$unsubscribe',
+      value: function $unsubscribe(ns) {
+        var vm = this;
+        var subs = vm[subscriptionsKey];
+
+        try {
+          // unsubscribe one
+          if (ns) {
+            var sub = subs[ns];
+            if (sub && typeof sub.unsubscribe === 'function') {
+              sub.unsubscribe();
+            }
+            delete subs[ns];
+            return;
+          }
+
+          // unsubscribe all
+          Object.keys(subs).forEach(function (key) {
+            var sub = subs[key];
+            if (sub && typeof sub.unsubscribe === 'function') {
+              sub.unsubscribe();
+            }
+            delete subs[key];
+          });
+        } catch (e) {
+          console.log(e);
+        }
+      }
+    }, {
       key: 'componentWillUnMount',
       value: function componentWillUnMount() {
-        this[unsubscribeKey]();
+        this.$unsubscribe();
       }
     }]);
     return RxHubComponent;
@@ -530,4 +560,5 @@ exports.Hub = Hub;
 exports.VuePlugin = VuePlugin;
 exports.logMiddleware = logMiddleware;
 exports.createRxHubComponent = createRxHubComponent;
+exports.useRx = useRx;
 //# sourceMappingURL=data-hub.common.js.map

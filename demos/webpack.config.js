@@ -30,7 +30,7 @@ module.exports = {
     ],
     extensions: ['.js', '.jsx', '.vue', '.json', '.css'],
     alias: RX_HUB == 'debug' ? {
-      'rx-hub': path.resolve(__dirname, '../dist/rx-hub.js'),
+      'data-hub': path.resolve(__dirname, '../dist/data-hub.js'),
     } : {}
   },
   module: {

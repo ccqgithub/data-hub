@@ -1,8 +1,10 @@
-import {Hub, logMiddleware} from 'data-hub';
+import {Hub, logMiddleware, useRx} from 'data-hub';
 import Rx from 'rxjs/Rx';
 import mainStore from '../stores/main';
 import * as userServerConverters from '../converters/server/user';
 import * as storeConverters from '../converters/store';
+
+useRx(Rx);
 
 const hub = new Hub({
   beforeMiddlewares: [logMiddleware],

@@ -1,52 +1,55 @@
+import {Rx, checkRx} from '../rxjs';
+
 export default function createRxHubComponent({
   store,
   hub,
   storeKey = '$store',
   hubKey = '$hub',
-  subscriptionsKey = '$subs',
-  unsubscribeKey = '$unsubscribe'
+  subscriptionsKey = '$subs'
 }, React) {
 
   class RxHubComponent extends React.Component {
     constructor(props) {
       super(props);
 
+      // check rx install
+      checkRx();
+
       this[storeKey] = store;
       this[hubKey] = hub;
-      this[subscriptionsKey] = {};
+      this[subscriptionsKey] = {};      
+    }
 
-      // unsubscribe
-      this[unsubscribeKey] = (key) => {
-        let subscriptions = this[subscriptionsKey];
-
-        try {
-          // remove one
-          if (key) {
-            if (
-              subscriptions[key]
-              && typeof subscriptions[key].unsubscribe === 'function'
-            ) {
-              subscriptions[key].unsubscribe();
-            }
-            return;
+    $unsubscribe(ns) {
+      const vm = this;
+      const subs = vm[subscriptionsKey];
+  
+      try {
+        // unsubscribe one
+        if (ns) {
+          let sub = subs[ns]; 
+          if (sub && typeof sub.unsubscribe === 'function') {
+            sub.unsubscribe();
           }
-
-          // remove all
-          Object.keys(subscriptions).forEach(key => {
-            let subscription = subscriptions[key];
-            if (typeof subscription.unsubscribe === 'function') {
-              subscription.unsubscribe();
-            }
-          });
-
-        } catch(e) {
-          console.error(e);
+          delete subs[ns];
+          return;
         }
+  
+        // unsubscribe all
+        Object.keys(subs).forEach(key => {
+          let sub = subs[key];
+          if (sub && typeof sub.unsubscribe === 'function') {
+            sub.unsubscribe();
+          }
+          delete subs[key];
+        });
+      } catch(e) {
+        console.log(e);
       }
     }
 
     componentWillUnMount() {
-      this[unsubscribeKey]();
+      this.$unsubscribe();
     }
   };
 

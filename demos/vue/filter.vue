@@ -33,7 +33,7 @@ export default {
           id: Date.now(),
           name: 'user-' + Math.round(Math.random() * 1000000),
         })
-        .switchMap(this.$hub.pipe('server.user.userAdd'))
+        .concatMap(this.$hub.pipe('server.user.userAdd'))
         .map((user) => {
           return {
             mutation: 'user.add',

@@ -1,15 +1,17 @@
-import {Observable, Subject} from './rxjs';
+import {Rx, checkRx} from './rxjs';
 import invariant from './util/invariant';
 
 export default class Hub {
   // constructor
   constructor(options={}) {
+    // check rx install
+    checkRx();
+
     let beforeMiddlewares = options.beforeMiddlewares || [];
     let afterMiddlewares = options.afterMiddlewares || [];
 
     // Rx Refrence
-    this.Observable = Observable;
-    this.Subject = Subject;
+    this.Rx = Rx;
 
     // store pipes, middlewares
     this._pipes = {};
@@ -34,7 +36,7 @@ export default class Hub {
   // add pipe
   addPipe(name, converter) {
     this._pipes[name] = (payload) => {
-      return Observable.of(payload)
+      return Rx.Observable.of(payload)
         .concatMap(this.combinedMiddleware('before', name))
         .concatMap(converter)
         .concatMap(this.combinedMiddleware('after', name));
@@ -53,7 +55,7 @@ export default class Hub {
   // commine middlewares
   combinedMiddleware(type, pipeName) {
     return (payload) => {
-      let observable = Observable.of(payload);
+      let observable = Rx.Observable.of(payload);
       this._middlewares[type].forEach(fn => {
         observable = observable.map(payload => {
           return {

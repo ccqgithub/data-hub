@@ -1,5 +1,5 @@
 import hub from '../data/hubs/main';
-import {Observable} from 'rxjs/Rx';
+import {Observable, Subject} from 'rxjs/Rx';
 import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
 import "../style/style.less";

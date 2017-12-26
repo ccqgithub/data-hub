@@ -1,5 +1,8 @@
-import {Store} from 'data-hub';
+import {Store, useRx} from 'data-hub';
+import Rx from 'rxjs/Rx';
 import user from './modules/user';
+
+useRx(Rx);
 
 export default new Store({
   debug: true,
