@@ -1,0 +1,514 @@
+
+<!DOCTYPE HTML>
+<html lang="zh-hans" >
+    <head>
+        <meta charset="UTF-8">
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>数据流动图 · rx-hub</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.2.3">
+        
+        
+        
+    
+    <link rel="stylesheet" href="../gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-search-plus/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-prism/prism-base16-ateliersulphurpool.light.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-advanced-emoji/emoji-website.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-anchors/plugin.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-ace/ace.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-emphasize/plugin.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-katex/katex.min.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-splitter/splitter.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-tbfed-pagefooter/footer.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-expandable-chapters-small/expandable-chapters-small.css">
+                
+            
+                
+                <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-sectionx/sectionx.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-local-video/video-js.min.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-anchor-navigation-ex/style/plugin.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="../gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="concat.html" />
+    
+    
+    <link rel="prev" href="core-concepts.html" />
+    
+
+    
+    
+    
+    
+
+    <style>
+    @media only screen and (max-width: 640px) {
+        .book-header .hidden-mobile {
+            display: none;
+        }
+    }
+    </style>
+    <script>
+        window["gitbook-plugin-github-buttons"] = {"repo":"ccqgithub/rx-hub","types":["star"],"size":"small"};
+    </script>
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="输入并搜索" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        <li class="header">基本使用</li>
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="./">
+            
+                <a href="./">
+            
+                    
+                        <b>1.1.</b>
+                    
+                    Introduction
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="installation.html">
+            
+                <a href="installation.html">
+            
+                    
+                        <b>1.2.</b>
+                    
+                    安装
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" data-path="intro.html">
+            
+                <a href="intro.html">
+            
+                    
+                        <b>1.3.</b>
+                    
+                    data-hub 是什么？
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4" data-path="core-concepts.html">
+            
+                <a href="core-concepts.html">
+            
+                    
+                        <b>1.4.</b>
+                    
+                    核心概念
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.5" data-path="overview.html">
+            
+                <a href="overview.html">
+            
+                    
+                        <b>1.5.</b>
+                    
+                    数据流动图
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6" data-path="concat.html">
+            
+                <a href="concat.html">
+            
+                    
+                        <b>1.6.</b>
+                    
+                    管道连接
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7" data-path="getting-started.html">
+            
+                <a href="getting-started.html">
+            
+                    
+                        <b>1.7.</b>
+                    
+                    开始
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8" data-path="structure.html">
+            
+                <a href="structure.html">
+            
+                    
+                        <b>1.8.</b>
+                    
+                    目录结构
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+        
+        <li class="header">API手册</li>
+        
+        
+    
+        <li class="chapter " data-level="2.1" data-path="api/hub.html">
+            
+                <a href="api/hub.html">
+            
+                    
+                        <b>2.1.</b>
+                    
+                    数据板：Hub
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="2.2" data-path="api/store.html">
+            
+                <a href="api/store.html">
+            
+                    
+                        <b>2.2.</b>
+                    
+                    数据池：Store
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+        
+        <li class="header">辅助工具</li>
+        
+        
+    
+        <li class="chapter " data-level="3.1" data-path="tool/vue.html">
+            
+                <a href="tool/vue.html">
+            
+                    
+                        <b>3.1.</b>
+                    
+                    Vue：VuePlugin
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="3.2" data-path="tool/react.html">
+            
+                <a href="tool/react.html">
+            
+                    
+                        <b>3.2.</b>
+                    
+                    React：createRxHubComponent
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            本书使用 GitBook 发布
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href="." >数据流动图</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h2 id="&#x6570;&#x636E;&#x6D41;&#x52A8;&#x56FE;"><a name="&#x6570;&#x636E;&#x6D41;&#x52A8;&#x56FE;" class="anchor-navigation-ex-anchor" href="#&#x6570;&#x636E;&#x6D41;&#x52A8;&#x56FE;"><i class="fa fa-link" aria-hidden="true"></i></a>&#x6570;&#x636E;&#x6D41;&#x52A8;&#x56FE;</h2>
+<p><img src="../img/data-hub.jpg" alt="&#x6570;&#x636E;&#x6D41;&#x52A8;&#x56FE;">&#x3002;</p>
+<footer class="page-footer"><span class="copyright">Copyright &#xA9; season.chen all right reserved&#xFF0C;powered by Gitbook</span><span class="footer-modification">&#x8BE5;&#x6587;&#x4EF6;&#x4FEE;&#x8BA2;&#x65F6;&#x95F4;&#xFF1A;
+2017-12-26 20:53:43
+</span></footer>
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="core-concepts.html" class="navigation navigation-prev " aria-label="Previous page: 核心概念">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+                <a href="concat.html" class="navigation navigation-next " aria-label="Next page: 管道连接">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"数据流动图","level":"1.5","depth":1,"next":{"title":"管道连接","level":"1.6","depth":1,"path":"concat.md","ref":"concat.md","articles":[]},"previous":{"title":"核心概念","level":"1.4","depth":1,"path":"core-concepts.md","ref":"core-concepts.md","articles":[]},"dir":"ltr"},"config":{"plugins":["-lunr","-search","-highlight","-livereload","search-plus@^0.0.11","simple-page-toc@^0.1.1","github@^2.0.0","github-buttons@2.1.0","edit-link@^2.0.2","prism@^2.1.0","prism-themes@^0.0.2","advanced-emoji@^0.2.1","anchors@^0.7.1","include-codeblock@^3.0.2","ace@^0.3.2","emphasize@^1.1.0","katex@^1.1.3","splitter@^0.0.8","mermaid@^0.0.9","tbfed-pagefooter@^0.0.1","expandable-chapters-small@^0.1.7","sectionx@^3.1.0","local-video@^1.0.1","anchor-navigation-ex@0.1.8","favicon@^0.0.2","todo@^0.1.3","edit-link"],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright © season.chen","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"prism":{"css":["prism-themes/themes/prism-base16-ateliersulphurpool.light.css"]},"emphasize":{},"ace":{},"github":{"url":"https://github.com/ccqgithub/rx-hub"},"simple-page-toc":{"maxDepth":3,"skipFirstH1":true},"todo":{},"splitter":{},"mermaid":{},"katex":{},"fontsettings":{"theme":"white","family":"sans","size":2},"sectionx":{"tag":"b"},"anchor-navigation-ex":{"isRewritePageTitle":false,"tocLevel1Icon":"fa fa-hand-o-right","tocLevel2Icon":"fa fa-hand-o-right","tocLevel3Icon":"fa fa-hand-o-right"},"favicon":{},"prism-themes":{},"github-buttons":{"repo":"ccqgithub/rx-hub","types":["star"],"size":"small"},"expandable-chapters-small":{},"local-video":{},"advanced-emoji":{"embedEmojis":false},"include-codeblock":{"check":false,"edit":true,"fixlang":false,"lang":"","template":"ace","theme":"chrome","unindent":true},"sharing":{"facebook":false,"twitter":false,"google":false,"weibo":true,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/ccqgithub/rx-hub/tree/master/docs"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":true},"anchors":{},"search-plus":{}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"rx-hub","language":"zh-hans","links":{"sharing":{"facebook":false,"twitter":false}},"gitbook":"*"},"file":{"path":"overview.md","mtime":"2017-12-26T12:53:43.190Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2017-12-26T14:55:02.249Z"},"basePath":".","book":{"language":"zh-hans"}});
+        });
+    </script>
+</div>
+
+        
+    <script src="../gitbook/gitbook.js"></script>
+    <script src="../gitbook/theme.js"></script>
+    
+        
+        <script src="../gitbook/gitbook-plugin-search-plus/jquery.mark.min.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search-plus/search.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-github/plugin.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-github-buttons/plugin.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-edit-link/plugin.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-ace/ace/ace.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-ace/ace.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-splitter/splitter.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-expandable-chapters-small/expandable-chapters-small.js"></script>
+        
+    
+        
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-sectionx/sectionx.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-local-video/video.min.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-sharing/buttons.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+
