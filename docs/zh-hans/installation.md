@@ -42,7 +42,7 @@ useRx(Rx);
 import {useRx, Hub} from 'data-hub';
 import {Observable, Subject} from 'rxjs/Rx';
 
-useRx(Rx);
+useRx({Observable, Subject});
 
 //let hub = new Hub
 ```

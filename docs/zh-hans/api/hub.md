@@ -13,8 +13,7 @@ const hub = new Hub({
 });
 ```
 
-- `hub.Observable`: Rx.ObObservable.
-- `hub.Subject`: Rx.Subject.
+- `hub.Rx`: useRx(Rx)中的`Rx`.
 
 - `hub.addPipe(name, converter)`: 添加一个管道。
 

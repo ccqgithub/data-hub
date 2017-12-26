@@ -44,7 +44,9 @@ function useRx() {
 function checkRx() {
   invariant(!Rx._needInstall && Rx.Observable && Rx.Subject, 'data-hub error ~ useRx({Observerble, Subject}) is required!');
 
-  invariant(Rx.Observable.of, 'data-hub error ~ Rx.Observable.of is required! Try import \'import \'rxjs/add/observable/of\'.');
+  invariant(Rx.Observable.from, 'data-hub error ~ \'Rx.Observable.from\' is required! Try import \'rxjs/add/observable/from\'');
+
+  invariant(Rx.Observable.of, 'data-hub error ~ \'Rx.Observable.of\' is required! Try import \'rxjs/add/observable/of\'');
 }
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
@@ -331,8 +333,13 @@ var Hub = function () {
     value: function addPipe(name, converter) {
       var _this = this;
 
+      var converterFn = function converterFn(payload) {
+        var ob = converter(payload);
+        return Rx.Observable.from(ob);
+      };
+
       this._pipes[name] = function (payload) {
-        return Rx.Observable.of(payload).concatMap(_this.combinedMiddleware('before', name)).concatMap(converter).concatMap(_this.combinedMiddleware('after', name));
+        return Rx.Observable.of(payload).concatMap(_this.combinedMiddleware('before', name)).concatMap(converterFn).concatMap(_this.combinedMiddleware('after', name));
       };
     }
 
@@ -377,7 +384,12 @@ var Hub = function () {
   }, {
     key: 'addMiddleware',
     value: function addMiddleware(type, middleware) {
-      this._middlewares[type].push(middleware);
+      var middlewareFn = function middlewareFn(payload) {
+        var ob = middleware(payload);
+        return Rx.Observable.from(ob);
+      };
+
+      this._middlewares[type].push(middlewareFn);
     }
   }]);
   return Hub;

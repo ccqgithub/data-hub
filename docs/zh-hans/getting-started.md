@@ -6,10 +6,10 @@
 
 ```js
 // data/stores/main.js
-import Rx from 'rxjs';
+import Rx, {Observable, Subject} from 'rxjs';
 import {Store, useRx} from 'data-hub';
 
-useRx(Rx);
+useRx(Rx); // or: useRx({Observable, Subject});
 
 export default new Store({
   debug: process.env.NODE_ENV !== 'production',
@@ -47,7 +47,9 @@ export default new Store({
 
 ## 定义`转换器`
 
-每一个`转换器`是一个函数，传入一个数据对象`payload`, 传出一个可观察的数据流（Observable：RxJS数据流）。
+每一个`转换器`是一个函数，传入一个数据对象`payload`, 传出一个可观察的数据流（Observable：RxJS数据流）或者可以通过`Rx.Observable.from`转换为数据流的对象。
+
+- 详情参见：[Rx.Observable.from](http://reactivex.io/rxjs/class/es6/Observable.js~Observable.html#static-method-from).
 
 ```js
 // data/converters/user.js
@@ -60,7 +62,7 @@ export let userDel = (userId) => {
     // 处理一些删除用户的事情
     setTimeout(() => resolve(userId), 1000);
   });
-  return Rx.Observable.from(promise);
+  return promise;
 };
 
 // 添加用户：传入用户信息`user`，传出服务器返回的数据对象
@@ -73,7 +75,7 @@ export let userAdd = (user) => {
     return response.data
   });
 
-  return Rx.Observable.from(promise);
+  return promise;
 };
 ```
 

@@ -20,5 +20,5 @@ export let userAdd = (user) => {
   let promise = new Promise((resolve, reject) => {
     setTimeout(() => resolve(user), 1000);
   });
-  return Rx.Observable.from(promise);
+  return promise;
 };

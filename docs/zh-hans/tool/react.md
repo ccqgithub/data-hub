@@ -22,8 +22,7 @@ const Base = createRxHubComponent({
   store,
   storeKey = '$store',
   hubKey = '$hub',
-  subscriptionsKey = '$subs',
-  unsubscribeKey = '$unsubscribe'
+  subscriptionsKey = '$subs'
 }, React);
 
 export default Base;

@@ -15,7 +15,12 @@ export function checkRx() {
   );
 
   invariant(
+    Rx.Observable.from,
+    `data-hub error ~ 'Rx.Observable.from' is required! Try import 'rxjs/add/observable/from'`
+  );
+
+  invariant(
     Rx.Observable.of,
-    `data-hub error ~ Rx.Observable.of is required! Try import 'import 'rxjs/add/observable/of'.`
+    `data-hub error ~ 'Rx.Observable.of' is required! Try import 'rxjs/add/observable/of'`
   );
 }
